@@ -8,35 +8,43 @@ AI-driven marketing intelligence and activation platform powered by Next.js, Typ
 
 ## Project Status
 
-**Phase 0 Complete** - Foundation & Next.js Migration
+**Phase 1 Complete** - Monorepo + Backend + Testing Infrastructure
 
-- ✅ Next.js 16 App Router with Turbopack
-- ✅ TypeScript strict mode enabled
-- ✅ Quality tooling (ESLint, Prettier, Husky, Makefile)
-- ✅ All pages migrated to Next.js App Router
-- ✅ Production build working (static export)
+- ✅ Turborepo monorepo with pnpm workspaces
+- ✅ NestJS backend API (PostgreSQL ready)
+- ✅ Shared workspace packages (types, core, auth, ui, api-client)
+- ✅ Comprehensive testing (160+ tests, 95% coverage target)
+- ✅ CI/CD pipeline (GitHub Actions)
+- ✅ E2E testing with Playwright (5 browsers)
 
-**Next:** Phase 1 - Monorepo + Backend + Okta Auth
+**Previous:** Phase 0 - Foundation & Next.js Migration
+
+**Next:** Phase 2 - Data Plane (BigQuery, MCP Connectors, GA4)
 
 ## Tech Stack
 
+- **Monorepo:** Turborepo with pnpm workspaces
 - **Frontend:** Next.js 16 (App Router) + React 19 + TypeScript (strict mode)
+- **Backend:** NestJS + TypeORM + PostgreSQL (Cloud SQL ready)
 - **Styling:** Tailwind CSS 4
-- **Build:** Turbopack
+- **Build:** Turbopack (frontend), TypeScript (backend + packages)
+- **Testing:** Vitest (packages), Jest (backend), Playwright (E2E)
 - **Quality:** ESLint 9, Prettier, Husky pre-commit hooks
-- **Deployment Target:** Cloud Storage + CDN (static export)
+- **CI/CD:** GitHub Actions with quality gates
+- **Deployment Target:** Cloud Run (backend), Cloud Storage + CDN (frontend)
 
 ## Prerequisites
 
 - **Node.js:** 18.x or later
-- **npm:** 9.x or later
+- **pnpm:** 10.x or later (required for monorepo)
+- **Docker:** (optional) For running PostgreSQL locally
 
 ## Quick Start
 
 ### 1. Install Dependencies
 
 ```bash
-npm install
+pnpm install
 ```
 
 ### 2. Configure Environment
@@ -47,85 +55,142 @@ Create `.env.local` and add your Gemini API key:
 GEMINI_API_KEY=your_api_key_here
 ```
 
-### 3. Run Development Server
+### 3. Run Development Servers
+
+**Frontend:**
 
 ```bash
-npm run dev
+cd apps/web
+pnpm dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+**Backend API:**
 
-The development server uses Turbopack for fast hot module replacement.
+```bash
+cd services/api
+pnpm dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) for frontend.
+
+The frontend development server uses Turbopack for fast hot module replacement.
 
 ## Available Commands
 
 ### Development
 
 ```bash
-npm run dev          # Start Next.js dev server with Turbopack
-npm run build        # Build production static export
-npm run start        # Serve production build locally (after npm run build)
+# Monorepo commands (from root)
+pnpm dev            # Run all dev servers (frontend + backend)
+pnpm build          # Build all packages and apps
+pnpm lint           # Lint all packages
+pnpm typecheck      # Type check all packages
+
+# Individual apps
+cd apps/web && pnpm dev          # Frontend dev server
+cd services/api && pnpm dev      # Backend dev server
 ```
+
+### Testing
+
+**Run All Tests:**
+
+```bash
+pnpm test           # Run all tests (packages + backend)
+```
+
+**Package Tests (Vitest):**
+
+```bash
+cd packages/core && pnpm test              # Run core package tests
+cd packages/core && pnpm test --coverage   # With coverage report
+cd packages/types && pnpm test             # Run types tests
+```
+
+**Backend Tests (Jest):**
+
+```bash
+cd services/api && pnpm test               # Run backend tests
+cd services/api && pnpm test --coverage    # With coverage report
+```
+
+**E2E Tests (Playwright):**
+
+```bash
+cd apps/web && pnpm test:e2e               # Run E2E tests (headless)
+cd apps/web && pnpm test:e2e:ui            # Run with UI mode
+cd apps/web && pnpm test:e2e:debug         # Debug mode
+```
+
+**Test Statistics:**
+
+- 160+ test cases across all layers
+- 95% coverage target (ADR-019 compliant)
+- 5 browser configurations for E2E tests
+
+See [TESTING.md](TESTING.md) for comprehensive testing documentation.
 
 ### Quality Tooling
 
 ```bash
 make check          # Run ESLint + TypeScript type checking
 make format         # Format code with Prettier
-make test           # Run tests (placeholder - tests coming in Phase 1)
-make e2e            # Run E2E tests (placeholder - coming in Phase 5)
 ```
 
 **Pre-commit Hook:** Husky automatically runs `make check` before each commit.
 
-### Linting & Type Checking
+### CI/CD Pipeline
 
-```bash
-npm run lint        # Run ESLint
-npm run type-check  # Run TypeScript compiler check
-```
+GitHub Actions automatically runs on every push/PR:
+
+1. **Lint & Type Check** - ESLint + TypeScript across all packages
+2. **Package Tests** - Vitest with coverage reporting
+3. **Backend Tests** - Jest with PostgreSQL service
+4. **E2E Tests** - Playwright on Chromium
+5. **Build** - Build all packages and apps
+6. **Quality Gate** - Fail if any job fails
+
+Coverage reports are uploaded to Codecov.
+
+See `.github/workflows/ci.yml` for full pipeline configuration.
 
 ## Project Structure
 
 ```
 random-truffle/
-├── app/                          # Next.js App Router pages
-│   ├── (authenticated)/          # Route group with sidebar layout
-│   │   ├── layout.tsx           # Authenticated layout with sidebar
-│   │   ├── welcome/             # Welcome dashboard
-│   │   ├── analytics/           # Analytics page
-│   │   ├── audiences/           # Audience management
-│   │   │   └── create/          # Multi-step audience wizard
-│   │   ├── activation/          # Channel activation
-│   │   ├── profile/             # User profile
-│   │   ├── admin/               # Admin section (nested layout)
-│   │   ├── setup/               # Setup section (nested layout)
-│   │   └── superadmin/          # SuperAdmin section (nested layout)
-│   ├── login/                   # Login page
-│   ├── layout.tsx               # Root layout
-│   ├── page.tsx                 # Home page (redirects to login)
-│   └── globals.css              # Global styles + Tailwind
-├── components/                  # React components
-│   ├── audience/                # Audience wizard steps (Step1-Step10)
-│   ├── ui/                      # Reusable UI components
-│   ├── SidebarNext.tsx          # Main navigation sidebar
-│   └── ErrorBoundary.tsx        # Error boundary wrapper
-├── contexts/                    # React contexts
-│   ├── AuthContext.tsx          # Authentication state (placeholder)
-│   └── CreateAudienceContext.tsx # Audience wizard state
-├── hooks/                       # Custom React hooks
-│   └── useAuth.tsx              # Auth hook (placeholder)
-├── public/                      # Static assets
-├── __tests__/                   # Test files
-├── pages-old-vite/              # Old Vite pages (archived)
-├── vite-old-files/              # Old Vite config files (archived)
-├── next.config.mjs              # Next.js configuration
-├── tailwind.config.ts           # Tailwind CSS configuration
-├── tsconfig.json                # TypeScript configuration (strict mode)
-├── eslint.config.js             # ESLint 9 flat config
-├── .prettierrc                  # Prettier configuration
-├── Makefile                     # Quality tooling commands
-└── CLAUDE.md                    # AI copilot guidelines
+├── apps/
+│   └── web/                     # Next.js App Router frontend
+│       ├── app/                 # Next.js App Router pages
+│       ├── components/          # React components
+│       ├── contexts/            # React contexts
+│       ├── e2e/                 # Playwright E2E tests
+│       └── playwright.config.ts # Playwright configuration
+├── services/
+│   └── api/                     # NestJS backend API
+│       ├── src/
+│       │   ├── users/          # Users module (service + controller)
+│       │   ├── app.module.ts   # Root module
+│       │   └── main.ts         # Bootstrap
+│       └── jest.config.js      # Jest configuration
+├── packages/
+│   ├── types/                  # Shared TypeScript types
+│   │   └── src/__tests__/     # Type tests (Vitest)
+│   ├── core/                   # Core shared utilities
+│   │   └── src/__tests__/     # Core tests (Vitest)
+│   ├── auth/                   # Authentication package
+│   ├── ui/                     # UI components library
+│   └── api-client/             # Type-safe API client
+├── .github/
+│   └── workflows/
+│       └── ci.yml              # GitHub Actions CI/CD pipeline
+├── thoughts/shared/            # Architecture docs & plans
+│   ├── plans/                  # ADRs, roadmap, specifications
+│   └── research/               # Research documents
+├── turbo.json                  # Turborepo configuration
+├── pnpm-workspace.yaml         # pnpm workspace configuration
+├── CLAUDE.md                   # AI copilot guidelines
+├── TESTING.md                  # Comprehensive testing guide
+└── README.md                   # This file
 ```
 
 ## Deployment
@@ -134,16 +199,29 @@ The app is configured for static export (`output: 'export'` in next.config.mjs).
 
 ### Build for Production
 
+**Frontend (Static Export):**
+
 ```bash
-npm run build
+cd apps/web && pnpm build
 ```
 
-This generates a static site in the `out/` directory that can be deployed to:
+This generates a static site in `apps/web/out/` that can be deployed to:
 
 - Google Cloud Storage + CDN
 - Vercel
 - Netlify
 - Any static hosting service
+
+**Backend (NestJS):**
+
+```bash
+cd services/api && pnpm build
+```
+
+This generates compiled JavaScript in `services/api/dist/` for deployment to:
+
+- Cloud Run
+- Any Node.js hosting service
 
 ### Production Build Output
 
@@ -209,25 +287,28 @@ Key architectural documents:
 - **Architecture Decisions:** `thoughts/shared/plans/architecture-decisions.md`
 - **Codebase Analysis:** `thoughts/shared/research/2025-10-25_codebase.md`
 
-## Phase 1 Roadmap (Next Steps)
+## Phase 2 Roadmap (Next Steps)
 
-**Weeks 4-8:** Monorepo + Backend + Okta Auth
+**Weeks 9-14:** Data Plane Foundation
 
-- Turborepo monorepo setup with pnpm workspaces
-- NestJS backend API service
-- Okta OIDC authentication (enterprise SSO)
-- PostgreSQL database (Cloud SQL)
-- Shared packages (types, core, auth, UI)
+- BigQuery integration (analytics data warehouse)
+- MCP connectors (BigQuery, GA4)
+- GA4 Consent Mode implementation
+- Session stitching (User-ID + user_pseudo_id)
+- Multi-currency support (USD, MXN, COP)
 
 See `thoughts/shared/plans/roadmap-updates-v1.1.md` for full roadmap.
 
+## Documentation
+
+- **[CLAUDE.md](CLAUDE.md)** - AI copilot guidelines and quick reference
+- **[TESTING.md](TESTING.md)** - Comprehensive testing guide (160+ tests)
+- **[thoughts/shared/plans/](thoughts/shared/plans/)** - Implementation plans and ADRs
+- **[thoughts/shared/research/](thoughts/shared/research/)** - Technical research and analysis
+
 ## Support
 
-For questions or issues, consult:
-
-1. **CLAUDE.md** - AI copilot guidelines and quick reference
-2. **thoughts/shared/plans/** - Detailed implementation plans and ADRs
-3. **thoughts/shared/research/** - Technical research and analysis
+For questions or issues, consult the documentation above or package-specific README files.
 
 ## License
 
