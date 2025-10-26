@@ -15,7 +15,7 @@ export const useAuth = () => {
 
     const login = useCallback(async (email?: string, password?: string) => {
         // In a real app, this would involve an API call to your backend
-        console.log("Attempting to log in with", email, password);
+        // TODO: Replace with actual Okta OIDC authentication in Phase 1
         localStorage.setItem('user', JSON.stringify(MOCK_USER));
         setUser(MOCK_USER);
     }, []);

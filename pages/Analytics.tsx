@@ -1,9 +1,10 @@
 import React from 'react';
 import PageHeader from '../components/ui/PageHeader';
 import KpiCard from '../components/ui/KpiCard';
-import BarChart from '../components/BarChart';
-import LineChart from '../components/LineChart';
-import { kpiData, barChartData, lineChartData } from '../data/mockData';
+// TODO: Migrate to Recharts (ADR-003) - Chart.js removed in Phase 0
+// import BarChart from '../components/BarChart';
+// import LineChart from '../components/LineChart';
+import { kpiData } from '../data/mockData'; // barChartData, lineChartData
 import Card from '../components/ui/Card';
 
 const Analytics: React.FC = () => {
@@ -17,7 +18,8 @@ const Analytics: React.FC = () => {
         ))}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      {/* TODO: Restore charts with Recharts implementation (ADR-003) */}
+      {/* <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card>
           <div className="h-80">
             <LineChart data={lineChartData} title="Audience Growth" />
@@ -28,7 +30,7 @@ const Analytics: React.FC = () => {
             <BarChart data={barChartData} title="Conversions by Channel" />
           </div>
         </Card>
-      </div>
+      </div> */}
     </div>
   );
 };
