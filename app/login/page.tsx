@@ -18,7 +18,7 @@ export default function LoginPage(): JSX.Element {
     e.preventDefault();
     await login(email, password);
     // TODO: In Phase 1, proper authentication flow with Okta will handle redirect
-    router.push('/dashboard');
+    router.push('/welcome');
   };
 
   return (
