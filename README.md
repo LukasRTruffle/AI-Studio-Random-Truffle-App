@@ -8,24 +8,28 @@ AI-driven marketing intelligence and activation platform powered by Next.js, Typ
 
 ## Project Status
 
-**Phase 1 Complete** - Monorepo + Backend + Testing Infrastructure
+**Phase 2 Complete** - Data Plane Foundation
 
-- ✅ Turborepo monorepo with pnpm workspaces
-- ✅ NestJS backend API (PostgreSQL ready)
-- ✅ Shared workspace packages (types, core, auth, ui, api-client)
-- ✅ Comprehensive testing (160+ tests, 95% coverage target)
-- ✅ CI/CD pipeline (GitHub Actions)
-- ✅ E2E testing with Playwright (5 browsers)
+- ✅ BigQuery package with TypeScript client and types
+- ✅ MCP BigQuery connector with caching and rate limiting
+- ✅ Analytics API module (KPIs, sessions, audience metrics)
+- ✅ Frontend Analytics integration with real data
+- ✅ BigQuery schemas, views, and reusable queries
+- ✅ GA4 Consent Mode and session stitching (ADR-008, ADR-009)
+- ✅ Multi-currency support (USD, MXN, COP) (ADR-010)
+- ✅ Comprehensive tests (250+ tests total, 95% coverage target)
 
-**Previous:** Phase 0 - Foundation & Next.js Migration
+**Previous:** Phase 1 - Monorepo + Backend + Testing Infrastructure
 
-**Next:** Phase 2 - Data Plane (BigQuery, MCP Connectors, GA4)
+**Next:** Phase 3 - Vertex AI Agents (Data Science, Audience Builder)
 
 ## Tech Stack
 
 - **Monorepo:** Turborepo with pnpm workspaces
 - **Frontend:** Next.js 16 (App Router) + React 19 + TypeScript (strict mode)
 - **Backend:** NestJS + TypeORM + PostgreSQL (Cloud SQL ready)
+- **Data Warehouse:** BigQuery (GA4 native sync)
+- **MCP Connectors:** BigQuery MCP with caching + rate limiting
 - **Styling:** Tailwind CSS 4
 - **Build:** Turbopack (frontend), TypeScript (backend + packages)
 - **Testing:** Vitest (packages), Jest (backend), Playwright (E2E)
@@ -287,17 +291,18 @@ Key architectural documents:
 - **Architecture Decisions:** `thoughts/shared/plans/architecture-decisions.md`
 - **Codebase Analysis:** `thoughts/shared/research/2025-10-25_codebase.md`
 
-## Phase 2 Roadmap (Next Steps)
+## Phase 3 Roadmap (Next Steps)
 
-**Weeks 9-14:** Data Plane Foundation
+**Weeks 15-20:** Vertex AI Agents
 
-- BigQuery integration (analytics data warehouse)
-- MCP connectors (BigQuery, GA4)
-- GA4 Consent Mode implementation
-- Session stitching (User-ID + user_pseudo_id)
-- Multi-currency support (USD, MXN, COP)
+- Data Science Agent (SQL generation from natural language)
+- Audience Builder Agent (audience strategy recommendations)
+- Synchronous API invocation (no orchestrator queue per ADR-018)
+- Multi-model support (Gemini Pro/Flash, GPT-4)
+- Agent prompt version control
 
 See `thoughts/shared/plans/roadmap-updates-v1.1.md` for full roadmap.
+See `PHASE-2-SUMMARY.md` for Phase 2 completion details.
 
 ## Documentation
 

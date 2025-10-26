@@ -1,0 +1,25 @@
+{
+  "name": "@random-truffle/mcp-bigquery",
+  "version": "0.1.0",
+  "description": "Model Context Protocol (MCP) connector for BigQuery",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "clean": "rm -rf dist",
+    "test": "vitest",
+    "test:coverage": "vitest --coverage"
+  },
+  "dependencies": {
+    "@random-truffle/bigquery": "workspace:*",
+    "@random-truffle/types": "workspace:*",
+    "@random-truffle/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^20.17.14",
+    "typescript": "^5.7.3",
+    "vitest": "^2.1.8",
+    "@vitest/coverage-v8": "^2.1.8"
+  }
+}
