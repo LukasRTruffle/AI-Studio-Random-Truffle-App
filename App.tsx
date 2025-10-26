@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import Sidebar from './components/Sidebar';
+import ErrorBoundary from './components/ErrorBoundary';
 import Welcome from './pages/Welcome';
 import Analytics from './pages/Analytics';
 import Audiences from './pages/Audiences';
@@ -34,12 +35,14 @@ const App: React.FC = () => {
   }
 
   return (
-    <Router>
-      <Routes>
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/*" element={isAuthenticated ? <PrivateRoutes /> : <Navigate to="/login" />} />
-      </Routes>
-    </Router>
+    <ErrorBoundary>
+      <Router>
+        <Routes>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/*" element={isAuthenticated ? <PrivateRoutes /> : <Navigate to="/login" />} />
+        </Routes>
+      </Router>
+    </ErrorBoundary>
   );
 };
 
