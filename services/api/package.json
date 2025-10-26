@@ -15,6 +15,7 @@
   "dependencies": {
     "@random-truffle/types": "workspace:*",
     "@random-truffle/core": "workspace:*",
+    "@random-truffle/auth": "workspace:*",
     "@random-truffle/bigquery": "workspace:*",
     "@random-truffle/mcp-bigquery": "workspace:*",
     "@random-truffle/agents": "workspace:*",

@@ -1,8 +1,10 @@
 import { Controller, Get, Query, HttpCode, HttpStatus, Post } from '@nestjs/common';
 import { AnalyticsService } from './analytics.service';
 import { GetKPIsDto, GetSessionTrendsDto, GetAudienceMetricsDto } from './dto/analytics.dto';
+import { Public } from '../auth/decorators/public.decorator';
 
 @Controller('analytics')
+@Public() // TODO: Remove this and protect routes with auth
 export class AnalyticsController {
   constructor(private readonly analyticsService: AnalyticsService) {}
 

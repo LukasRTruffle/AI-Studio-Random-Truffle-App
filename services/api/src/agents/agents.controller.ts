@@ -7,8 +7,10 @@
 import { Controller, Post, Get, Body, Param, HttpCode, HttpStatus } from '@nestjs/common';
 import { AgentsService } from './agents.service';
 import { AgentChatRequestDto, AgentTypeEnum } from './dto/agent-chat.dto';
+import { Public } from '../auth/decorators/public.decorator';
 
 @Controller('agents')
+@Public() // TODO: Remove this and protect routes with auth
 export class AgentsController {
   constructor(private readonly agentsService: AgentsService) {}
 

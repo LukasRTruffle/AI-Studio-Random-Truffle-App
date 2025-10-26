@@ -6,6 +6,7 @@ import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { AnalyticsModule } from './analytics/analytics.module';
 import { AgentsModule } from './agents/agents.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { AgentsModule } from './agents/agents.module';
     }),
 
     // Feature modules
+    AuthModule,
     UsersModule,
     AnalyticsModule,
     AgentsModule,
