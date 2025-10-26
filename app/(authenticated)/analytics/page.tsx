@@ -8,7 +8,7 @@ import KpiCard from '../../../components/ui/KpiCard';
 import { kpiData } from '../../../data/mockData'; // barChartData, lineChartData
 // import Card from '../../../components/ui/Card'; // Will be needed for Recharts charts
 
-export default function AnalyticsPage(): JSX.Element {
+export default function AnalyticsPage() {
   return (
     <div className="p-6 md:p-10">
       <PageHeader

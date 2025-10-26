@@ -17,7 +17,7 @@ const adminNavItems = [
   { name: 'SLOs', path: '/admin/slos', icon: 'monitoring' },
 ];
 
-export default function AdminLayout({ children }: { children: React.ReactNode }): JSX.Element {
+export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
 
   const isActive = (path: string): boolean => {

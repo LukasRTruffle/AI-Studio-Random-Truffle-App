@@ -2,7 +2,7 @@
 
 import PageHeader from '../../../components/ui/PageHeader';
 
-export default function SuperadminOverviewPage(): JSX.Element {
+export default function SuperadminOverviewPage() {
   return (
     <div className="p-6 md:p-10">
       <PageHeader title="Overview" subtitle="Manage platform-wide settings and tenants" />

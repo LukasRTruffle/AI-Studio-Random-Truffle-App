@@ -19,7 +19,7 @@ const superadminNavItems = [
   { name: 'Change Mgmt', path: '/superadmin/change', icon: 'change_history' },
 ];
 
-export default function SuperadminLayout({ children }: { children: React.ReactNode }): JSX.Element {
+export default function SuperadminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
 
   const isActive = (path: string): boolean => {

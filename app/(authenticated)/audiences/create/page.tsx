@@ -15,14 +15,14 @@ import Step9_DryRun from '../../../../components/audience/Step9_DryRun';
 import Step10_Monitor from '../../../../components/audience/Step10_Monitor';
 import PageHeader from '../../../../components/ui/PageHeader';
 
-export default function CreateAudiencePage(): JSX.Element {
+export default function CreateAudiencePage() {
   const context = useContext(CreateAudienceContext);
   if (!context) {
     return <div>Loading Audience Creator...</div>;
   }
   const { currentStep } = context;
 
-  const renderStep = (): JSX.Element => {
+  const renderStep = () => {
     switch (currentStep) {
       case 1:
         return <Step1_Describe />;

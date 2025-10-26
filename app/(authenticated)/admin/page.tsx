@@ -2,7 +2,7 @@
 
 import PageHeader from '../../../components/ui/PageHeader';
 
-export default function AdminUsersPage(): JSX.Element {
+export default function AdminUsersPage() {
   return (
     <div className="p-6 md:p-10">
       <PageHeader title="Users" subtitle="Manage tenant-level settings and users" />

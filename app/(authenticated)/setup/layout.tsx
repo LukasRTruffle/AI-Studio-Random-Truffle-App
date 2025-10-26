@@ -14,7 +14,7 @@ const setupNavItems = [
   { name: 'Infrastructure', path: '/setup/infra', icon: 'cloud' },
 ];
 
-export default function SetupLayout({ children }: { children: React.ReactNode }): JSX.Element {
+export default function SetupLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
 
   const isActive = (path: string): boolean => {

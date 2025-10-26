@@ -9,7 +9,7 @@ import { audienceData } from '../../../data/mockData';
 import { Audience } from '../../../types';
 import Icon from '../../../components/Icon';
 
-export default function AudiencesPage(): JSX.Element {
+export default function AudiencesPage() {
   const router = useRouter();
 
   const headers = ['Name', 'Size', 'Status', 'Created', 'Last Updated'];

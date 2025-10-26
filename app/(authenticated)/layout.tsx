@@ -3,11 +3,7 @@
 import SidebarNext from '../../components/SidebarNext';
 import ErrorBoundary from '../../components/ErrorBoundary';
 
-export default function AuthenticatedLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}): JSX.Element {
+export default function AuthenticatedLayout({ children }: { children: React.ReactNode }) {
   return (
     <ErrorBoundary>
       <div className="flex h-screen bg-gray-50">

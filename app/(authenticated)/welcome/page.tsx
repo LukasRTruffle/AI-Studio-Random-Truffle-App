@@ -4,7 +4,7 @@ import PageHeader from '../../../components/ui/PageHeader';
 import { useAuth } from '../../../hooks/useAuth';
 import Card from '../../../components/ui/Card';
 
-export default function WelcomePage(): JSX.Element {
+export default function WelcomePage() {
   const { user } = useAuth();
   return (
     <div className="p-6 md:p-10">

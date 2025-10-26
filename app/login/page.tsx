@@ -8,7 +8,7 @@ import Card from '../../components/ui/Card';
 import Input from '../../components/ui/Input';
 import FormField from '../../components/ui/FormField';
 
-export default function LoginPage(): JSX.Element {
+export default function LoginPage() {
   const { login } = useAuth();
   const router = useRouter();
   const [email, setEmail] = useState('');

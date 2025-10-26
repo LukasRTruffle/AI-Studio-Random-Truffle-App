@@ -3,7 +3,7 @@
 import PageHeader from '../../../components/ui/PageHeader';
 import SetupCard from '../../../components/setup/SetupCard';
 
-export default function SetupOverviewPage(): JSX.Element {
+export default function SetupOverviewPage() {
   return (
     <div className="p-6 md:p-10">
       <PageHeader title="Overview" subtitle="System configuration and health checks" />
