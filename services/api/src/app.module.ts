@@ -5,6 +5,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { AnalyticsModule } from './analytics/analytics.module';
+import { AgentsModule } from './agents/agents.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { AnalyticsModule } from './analytics/analytics.module';
     // Feature modules
     UsersModule,
     AnalyticsModule,
+    AgentsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

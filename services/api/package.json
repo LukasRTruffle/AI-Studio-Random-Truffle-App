@@ -17,6 +17,7 @@
     "@random-truffle/core": "workspace:*",
     "@random-truffle/bigquery": "workspace:*",
     "@random-truffle/mcp-bigquery": "workspace:*",
+    "@random-truffle/agents": "workspace:*",
     "@nestjs/common": "^11.0.8",
     "@nestjs/core": "^11.0.8",
     "@nestjs/platform-express": "^11.0.8",
