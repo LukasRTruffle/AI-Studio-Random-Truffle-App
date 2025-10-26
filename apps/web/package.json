@@ -17,6 +17,7 @@
     "@random-truffle/core": "workspace:*",
     "@random-truffle/auth": "workspace:*",
     "@random-truffle/ui": "workspace:*",
+    "@random-truffle/api-client": "workspace:*",
     "next": "^16.0.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
