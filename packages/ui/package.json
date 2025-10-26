@@ -10,7 +10,10 @@
   },
   "dependencies": {
     "@random-truffle/types": "workspace:*",
-    "@random-truffle/core": "workspace:*"
+    "@random-truffle/core": "workspace:*",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.0",
+    "tailwind-merge": "^2.2.1"
   },
   "devDependencies": {
     "@types/react": "^19.2.2",
