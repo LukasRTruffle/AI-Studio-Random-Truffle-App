@@ -1,48 +1,22 @@
-import React from 'react';
-import { Bar } from 'react-chartjs-2';
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Title,
-  Tooltip,
-  Legend,
-  ChartOptions,
-} from 'chart.js';
-import { ChartData } from '../types';
+// TODO: Migrate to Recharts (ADR-003) - Chart.js removed in Phase 0
+// This file is temporarily disabled until Recharts migration is complete
 
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
+import { ChartData } from '../types';
 
 interface BarChartProps {
   data: ChartData;
   title?: string;
 }
 
-const BarChart: React.FC<BarChartProps> = ({ data, title }) => {
-  const options: ChartOptions<'bar'> = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        position: 'top' as const,
-      },
-      title: {
-        display: !!title,
-        text: title,
-        font: {
-          size: 16,
-        },
-      },
-    },
-    scales: {
-      y: {
-        beginAtZero: true,
-      },
-    },
-  };
-
-  return <Bar options={options} data={data} />;
+const BarChart: React.FC<BarChartProps> = ({ title = 'Chart' }) => {
+  return (
+    <div className="w-full h-64 flex items-center justify-center bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
+      <div className="text-center text-gray-500">
+        <p className="font-medium">{title}</p>
+        <p className="text-sm">Chart will be migrated to Recharts in Phase 0.3</p>
+      </div>
+    </div>
+  );
 };
 
 export default BarChart;
