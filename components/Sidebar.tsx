@@ -40,12 +40,14 @@ const Sidebar: React.FC = () => {
       <div className="p-4 border-t">
         <NavLink
           to="/profile"
-          className={({ isActive }) => `flex items-center p-2 rounded-md transition-colors w-full mb-2 ${isActive ? 'bg-blue-100 text-blue-600' : 'hover:bg-gray-100'}`}
+          className={({ isActive }) =>
+            `flex items-center p-2 rounded-md transition-colors w-full mb-2 ${isActive ? 'bg-blue-100 text-blue-600' : 'hover:bg-gray-100'}`
+          }
         >
           <Icon name="account_circle" className="mr-3" />
           <span>Profile</span>
         </NavLink>
-         <button
+        <button
           onClick={logout}
           className="flex items-center p-2 rounded-md hover:bg-gray-100 w-full text-left"
         >

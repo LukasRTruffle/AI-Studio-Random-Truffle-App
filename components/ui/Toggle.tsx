@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 interface ToggleProps {
-    enabled: boolean;
-    setEnabled: (enabled: boolean) => void;
+  enabled: boolean;
+  setEnabled: (enabled: boolean) => void;
 }
 
-const Toggle: React.FC<ToggleProps> = ({ enabled, setEnabled}) => {
+const Toggle: React.FC<ToggleProps> = ({ enabled, setEnabled }) => {
   return (
     <button
       type="button"

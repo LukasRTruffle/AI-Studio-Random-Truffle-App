@@ -1,7 +1,7 @@
 import React from 'react';
 
 interface CheckboxProps extends React.InputHTMLAttributes<HTMLInputElement> {
-    label: string;
+  label: string;
 }
 
 const Checkbox: React.FC<CheckboxProps> = ({ label, ...props }) => {

@@ -1,2 +1,2 @@
-import KpiCard from "./ui/KpiCard";
+import KpiCard from './ui/KpiCard';
 export default KpiCard;

@@ -13,7 +13,11 @@ const KpiCard: React.FC<KpiData> = ({ title, value, change, changeType }) => {
       <div className="mt-2 flex items-baseline">
         <p className="text-3xl font-semibold">{value}</p>
         <div className={`ml-2 flex items-baseline text-sm font-semibold ${changeColor}`}>
-          <Icon name={iconName} className="self-center flex-shrink-0" style={{fontSize: '18px'}} />
+          <Icon
+            name={iconName}
+            className="self-center flex-shrink-0"
+            style={{ fontSize: '18px' }}
+          />
           <span className="sr-only">{isIncrease ? 'Increased' : 'Decreased'} by</span>
           {change}%
         </div>

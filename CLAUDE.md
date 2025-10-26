@@ -11,6 +11,7 @@ Random Truffle is an enterprise AI-driven marketing intelligence and activation 
 **Status:** Early-stage development (~8% complete per `thoughts/shared/research/2025-10-25_codebase.md`)
 
 **Current Implementation:**
+
 - Frontend: Vite + React prototype (30+ UI pages, mostly placeholders)
 - Backend: Not yet implemented (NestJS planned)
 - Data Plane: Not yet implemented (BigQuery planned)
@@ -19,6 +20,7 @@ Random Truffle is an enterprise AI-driven marketing intelligence and activation 
 **Target Architecture:** Full monorepo with services, agents, data plane (see structure below)
 
 **Implementation Plan:** See `thoughts/shared/plans/implementation-roadmap.md` for detailed 5-phase plan:
+
 - **Phase 0** (Weeks 1-3): Foundation & Next.js migration (TypeScript strict mode, security fixes, Next.js)
 - **Phase 1** (Weeks 4-8): Monorepo + backend + Okta auth (Turborepo, NestJS, OIDC, PostgreSQL)
 - **Phase 2** (Weeks 9-14): Data plane foundation (BigQuery, MCP connectors, GA4 Consent Mode)
@@ -34,6 +36,7 @@ Random Truffle is an enterprise AI-driven marketing intelligence and activation 
 **Status:** 25 Architecture Decision Records (ADRs) approved (see `thoughts/shared/plans/architecture-decisions.md`)
 
 **Critical Decisions:**
+
 - **Frontend:** Next.js App Router (migrating from Vite in Phase 0)
 - **Monorepo:** Turborepo (implementing in Phase 1, not Phase 5)
 - **Authentication:** Okta OIDC (not Google Identity Platform)
@@ -99,6 +102,7 @@ random-truffle/
 Random Truffle uses two distinct architectural patterns:
 
 **Services** (`services/`) - Traditional backend APIs
+
 - Deterministic, rule-based logic
 - Synchronous HTTP endpoints (REST/GraphQL)
 - Fast response times (< 1 second)
@@ -106,6 +110,7 @@ Random Truffle uses two distinct architectural patterns:
 - Tech: NestJS, PostgreSQL, Redis
 
 **Agents** (`agents/`) - AI-powered workers
+
 - LLM-driven, generative capabilities using Vertex AI
 - Synchronous API invocation (< 5 second response time goal)
 - Multi-model support (Gemini Pro/Flash, GPT-4)
@@ -114,10 +119,12 @@ Random Truffle uses two distinct architectural patterns:
 - Tech: Vertex AI Conversational Agents, Cloud Storage (artifacts)
 
 **Decision Framework:**
+
 - Use a **Service** for: CRUD operations, business logic, real-time responses, traditional integrations
 - Use an **Agent** for: Natural language understanding, creative/generative output, multi-step reasoning, domain expertise simulation
 
 **Agent Invocation Pattern:**
+
 ```
 User → Frontend → Service (API) → Vertex AI Agent (sync) → Response
                                         ↓
@@ -129,6 +136,7 @@ User → Frontend → Service (API) → Vertex AI Agent (sync) → Response
 ### Human-in-the-Loop (HITL) Governance
 
 **SuperAdmin Approval Required:**
+
 - Platform configuration changes
 - Agent prompt modifications
 - Infrastructure changes (Terraform apply in production)
@@ -136,6 +144,7 @@ User → Frontend → Service (API) → Vertex AI Agent (sync) → Response
 - Cost threshold changes
 
 **User-Level (Self-Service):**
+
 - Audience activation (to ad platforms)
 - Audience creation
 - Dashboard creation
@@ -155,6 +164,7 @@ User → Frontend → Service (API) → Vertex AI Agent (sync) → Response
 ### Activation Channels
 
 Multi-account support for:
+
 - Google Ads (via Google Ads API)
 - Meta / Facebook / Instagram (via Meta API)
 - TikTok (via TikTok Ads API)
@@ -162,6 +172,7 @@ Multi-account support for:
 ### MCP Connectors
 
 Model Context Protocol integrations:
+
 - BigQuery MCP (query execution, schema retrieval)
 - GA4 MCP (reporting API)
 - Google Ads MCP (customer match lists, campaign performance)
@@ -169,6 +180,7 @@ Model Context Protocol integrations:
 - TikTok MCP (custom audiences)
 
 **Security**:
+
 - Secrets via GCP Secret Manager (90-day rotation)
 - Least-privilege IAM roles
 - No hardcoded credentials
@@ -198,6 +210,7 @@ make e2e      # End-to-end tests (Playwright)
 ### Artifact Management
 
 Store development artifacts under:
+
 ```
 thoughts/shared/
 ├── research/     # Research documents
@@ -223,22 +236,26 @@ When implementing new features, use this decision tree:
 ### 2. Does it need LLM/AI capabilities?
 
 **YES** → Build an **Agent** (`agents/[name]/`)
+
 - Examples: SQL generation, strategy recommendations, natural language queries
 - Use LLM (Gemini, GPT, Claude)
 - Invoke asynchronously via orchestrator
 - Store outputs as artifacts in Cloud Storage
 
 **NO** → Build a **Service** or **Package**
+
 - Continue to Step 3
 
 ### 3. Does it serve HTTP requests or manage data?
 
 **YES** → Build a **Service** (`services/[name]/`)
+
 - Examples: REST API, authentication, data processing
 - Use NestJS for services
 - Deploy to Cloud Run
 
 **NO** → Build a **Package** (`packages/[name]/`)
+
 - Examples: Utility functions, shared types, UI components
 - No HTTP endpoints, no state
 - Import from other packages/apps
@@ -335,18 +352,20 @@ See `thoughts/shared/plans/implementation-roadmap.md` for phase dependencies.
    - Golden set testing for agent outputs (90% accuracy target)
 
 10. **Cost Control**:
-   - Daily budgets: $10 (dev), $25 (staging), $100 (prod - startup level)
-   - Cache LLM responses (5-minute TTL for identical queries)
-   - Set token limits (100K input, 4K output tokens max)
-   - Use Gemini Flash for simple tasks, Gemini Pro for complex
-   - Monitor and alert at 50%, 75%, 90%, 100% of budget
-   - User quotas: 50 calls/day (free), 500 calls/day (paid)
+
+- Daily budgets: $10 (dev), $25 (staging), $100 (prod - startup level)
+- Cache LLM responses (5-minute TTL for identical queries)
+- Set token limits (100K input, 4K output tokens max)
+- Use Gemini Flash for simple tasks, Gemini Pro for complex
+- Monitor and alert at 50%, 75%, 90%, 100% of budget
+- User quotas: 50 calls/day (free), 500 calls/day (paid)
 
 11. **Resilience**:
-   - Retry logic: Max 3 retries with exponential backoff (1s, 2s, 4s)
-   - Fallback models: Gemini Pro → Gemini Flash → Cached response → Error
-   - Timeout: 30 seconds per agent call
-   - Alert on retry rate > 10% or fallback rate > 5%
+
+- Retry logic: Max 3 retries with exponential backoff (1s, 2s, 4s)
+- Fallback models: Gemini Pro → Gemini Flash → Cached response → Error
+- Timeout: 30 seconds per agent call
+- Alert on retry rate > 10% or fallback rate > 5%
 
 12. **Governance**:
     - Implement HITL for sensitive operations:
@@ -402,20 +421,24 @@ npm run dev
 ## Related Documentation
 
 ### Planning & Architecture
+
 - **Architecture Decision Records (ADRs):** `thoughts/shared/plans/architecture-decisions.md` - 25 approved decisions (auth, agents, testing, etc.)
 - **Implementation Roadmap v1.0:** `thoughts/shared/plans/implementation-roadmap.md` - Original 5-phase plan
 - **Roadmap Updates v1.1:** `thoughts/shared/plans/roadmap-updates-v1.1.md` - Updated plan based on ADRs
 - **Agents vs. Services Architecture:** `thoughts/shared/research/agents-vs-services-architecture.md` - Deep dive on architectural patterns
 
 ### Research & Analysis
+
 - **Codebase Analysis:** `thoughts/shared/research/2025-10-25_codebase.md` - Current state assessment, gap analysis, and recommendations
 
 ### Implementation Guides
+
 - **Package READMEs:** Each package has its own README with specific documentation
 
 ## Questions?
 
 For architectural decisions, refer to:
+
 1. **This document (CLAUDE.md)** for high-level guidelines and quick reference
 2. **`thoughts/shared/plans/architecture-decisions.md`** for all 25 approved ADRs
 3. **`thoughts/shared/plans/roadmap-updates-v1.1.md`** for current phasing and priorities

@@ -4,20 +4,22 @@ import LoginPage from './LoginPage';
 import { BrowserRouter } from 'react-router-dom';
 
 // Mock matchMedia for testing environments like JSDOM
-window.matchMedia = window.matchMedia || function() {
+window.matchMedia =
+  window.matchMedia ||
+  function () {
     return {
-        matches: false,
-        addListener: function() {},
-        removeListener: function() {}
+      matches: false,
+      addListener: function () {},
+      removeListener: function () {},
     };
-};
+  };
 
 describe('LoginPage', () => {
   test('renders login form', () => {
     render(
-        <BrowserRouter>
-            <LoginPage />
-        </BrowserRouter>
+      <BrowserRouter>
+        <LoginPage />
+      </BrowserRouter>
     );
     expect(screen.getByText(/Sign in to your account/i)).not.toBeNull();
   });

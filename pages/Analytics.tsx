@@ -5,13 +5,16 @@ import KpiCard from '../components/ui/KpiCard';
 // import BarChart from '../components/BarChart';
 // import LineChart from '../components/LineChart';
 import { kpiData } from '../data/mockData'; // barChartData, lineChartData
-import Card from '../components/ui/Card';
+// import Card from '../components/ui/Card'; // Will be needed for Recharts charts
 
 const Analytics: React.FC = () => {
   return (
     <div className="p-6 md:p-10">
-      <PageHeader title="Analytics Dashboard" subtitle="Overview of audience and activation performance."/>
-      
+      <PageHeader
+        title="Analytics Dashboard"
+        subtitle="Overview of audience and activation performance."
+      />
+
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
         {kpiData.map((kpi, index) => (
           <KpiCard key={index} {...kpi} />

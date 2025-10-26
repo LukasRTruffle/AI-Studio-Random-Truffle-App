@@ -1,2 +1,2 @@
-import DataTable from "./ui/DataTable";
+import DataTable from './ui/DataTable';
 export default DataTable;

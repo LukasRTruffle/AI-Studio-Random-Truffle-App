@@ -14,39 +14,51 @@ import Step10_Monitor from '../components/audience/Step10_Monitor';
 import PageHeader from '../components/ui/PageHeader';
 
 const CreateAudience: React.FC = () => {
-    const context = useContext(CreateAudienceContext);
-    if (!context) {
-        return <div>Loading Audience Creator...</div>;
+  const context = useContext(CreateAudienceContext);
+  if (!context) {
+    return <div>Loading Audience Creator...</div>;
+  }
+  const { currentStep } = context;
+
+  const renderStep = () => {
+    switch (currentStep) {
+      case 1:
+        return <Step1_Describe />;
+      case 2:
+        return <Step2_Strategy />;
+      case 3:
+        return <Step3_SqlCheck />;
+      case 4:
+        return <Step4_Preview />;
+      case 5:
+        return <Step5_Metadata />;
+      case 6:
+        return <Step6_Consent />;
+      case 7:
+        return <Step7_Create />;
+      case 8:
+        return <Step8_Activation />;
+      case 9:
+        return <Step9_DryRun />;
+      case 10:
+        return <Step10_Monitor />;
+      default:
+        return <Step1_Describe />;
     }
-    const { currentStep } = context;
+  };
 
-    const renderStep = () => {
-        switch (currentStep) {
-            case 1: return <Step1_Describe />;
-            case 2: return <Step2_Strategy />;
-            case 3: return <Step3_SqlCheck />;
-            case 4: return <Step4_Preview />;
-            case 5: return <Step5_Metadata />;
-            case 6: return <Step6_Consent />;
-            case 7: return <Step7_Create />;
-            case 8: return <Step8_Activation />;
-            case 9: return <Step9_DryRun />;
-            case 10: return <Step10_Monitor />;
-            default: return <Step1_Describe />;
-        }
-    };
-
-    return (
-        <div className="p-6 md:p-10">
-            <PageHeader title="Create New Audience" subtitle="Follow the steps to define, create, and activate your audience." />
-            <div className="mb-8">
-                <StepIndicator />
-            </div>
-            <div>
-                {renderStep()}
-            </div>
-        </div>
-    );
+  return (
+    <div className="p-6 md:p-10">
+      <PageHeader
+        title="Create New Audience"
+        subtitle="Follow the steps to define, create, and activate your audience."
+      />
+      <div className="mb-8">
+        <StepIndicator />
+      </div>
+      <div>{renderStep()}</div>
+    </div>
+  );
 };
 
 export default CreateAudience;

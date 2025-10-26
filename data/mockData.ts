@@ -8,31 +8,59 @@ export const kpiData: KpiData[] = [
 ];
 
 export const audienceData: Audience[] = [
-  { id: '1', name: 'High-Value Customers', size: 15000, status: 'active', createdDate: '2023-01-15', lastUpdated: '2023-05-20' },
-  { id: '2', name: 'Recent Shoppers', size: 75000, status: 'active', createdDate: '2023-02-10', lastUpdated: '2023-05-22' },
-  { id: '3', name: 'Cart Abandoners (Last 7 Days)', size: 22000, status: 'inactive', createdDate: '2023-03-05', lastUpdated: '2023-05-18' },
-  { id: '4', name: 'Q2 Promo Prospects', size: 120000, status: 'draft', createdDate: '2023-04-01', lastUpdated: '2023-05-21' },
+  {
+    id: '1',
+    name: 'High-Value Customers',
+    size: 15000,
+    status: 'active',
+    createdDate: '2023-01-15',
+    lastUpdated: '2023-05-20',
+  },
+  {
+    id: '2',
+    name: 'Recent Shoppers',
+    size: 75000,
+    status: 'active',
+    createdDate: '2023-02-10',
+    lastUpdated: '2023-05-22',
+  },
+  {
+    id: '3',
+    name: 'Cart Abandoners (Last 7 Days)',
+    size: 22000,
+    status: 'inactive',
+    createdDate: '2023-03-05',
+    lastUpdated: '2023-05-18',
+  },
+  {
+    id: '4',
+    name: 'Q2 Promo Prospects',
+    size: 120000,
+    status: 'draft',
+    createdDate: '2023-04-01',
+    lastUpdated: '2023-05-21',
+  },
 ];
 
 export const lineChartData: ChartData = {
-    labels: ['January', 'February', 'March', 'April', 'May', 'June'],
-    datasets: [
-      {
-        label: 'Audience Size',
-        data: [65000, 59000, 80000, 81000, 56000, 55000],
-        borderColor: 'rgb(59, 130, 246)',
-        backgroundColor: 'rgba(59, 130, 246, 0.5)',
-      },
-    ],
+  labels: ['January', 'February', 'March', 'April', 'May', 'June'],
+  datasets: [
+    {
+      label: 'Audience Size',
+      data: [65000, 59000, 80000, 81000, 56000, 55000],
+      borderColor: 'rgb(59, 130, 246)',
+      backgroundColor: 'rgba(59, 130, 246, 0.5)',
+    },
+  ],
 };
 
 export const barChartData: ChartData = {
-    labels: ['Email', 'Social', 'Search', 'Display', 'Referral'],
-    datasets: [
-        {
-            label: '# of Conversions',
-            data: [120, 190, 300, 50, 20],
-            backgroundColor: 'rgba(54, 162, 235, 0.6)',
-        },
-    ],
+  labels: ['Email', 'Social', 'Search', 'Display', 'Referral'],
+  datasets: [
+    {
+      label: '# of Conversions',
+      data: [120, 190, 300, 50, 20],
+      backgroundColor: 'rgba(54, 162, 235, 0.6)',
+    },
+  ],
 };

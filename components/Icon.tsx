@@ -9,7 +9,11 @@ interface IconProps {
 
 const Icon: React.FC<IconProps> = ({ name, className, onClick, style }) => {
   return (
-    <span className={`material-symbols-outlined ${className || ''}`} onClick={onClick} style={style}>
+    <span
+      className={`material-symbols-outlined ${className || ''}`}
+      onClick={onClick}
+      style={style}
+    >
       {name}
     </span>
   );

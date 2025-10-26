@@ -15,7 +15,7 @@ const Audiences: React.FC = () => {
   const rows = audienceData.map((audience: Audience) => [
     audience.name,
     audience.size.toLocaleString(),
-    <StatusPill status={audience.status} />,
+    <StatusPill key={audience.id} status={audience.status} />,
     audience.createdDate,
     audience.lastUpdated,
   ]);
@@ -24,17 +24,13 @@ const Audiences: React.FC = () => {
     <div className="p-6 md:p-10">
       <PageHeader title="Audiences">
         <Button onClick={() => navigate('/audiences/create')}>
-          <div className='flex items-center'>
+          <div className="flex items-center">
             <Icon name="add" className="mr-2" />
             <span>Create Audience</span>
           </div>
         </Button>
       </PageHeader>
-      <DataTable
-        title="All Audiences"
-        headers={headers}
-        rows={rows}
-      />
+      <DataTable title="All Audiences" headers={headers} rows={rows} />
     </div>
   );
 };

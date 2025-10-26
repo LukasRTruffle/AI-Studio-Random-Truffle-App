@@ -14,9 +14,7 @@ const PageHeader: React.FC<PageHeaderProps> = ({ title, subtitle, children }) =>
           <h1 className="text-3xl font-bold text-gray-800">{title}</h1>
           {subtitle && <p className="text-gray-500 mt-1">{subtitle}</p>}
         </div>
-        <div className="flex-shrink-0">
-          {children}
-        </div>
+        <div className="flex-shrink-0">{children}</div>
       </div>
     </div>
   );

@@ -9,7 +9,9 @@ interface Message {
   sender: 'user' | 'bot';
 }
 
-const ChatInterface: React.FC<{onSendMessage: (message: string) => Promise<string>}> = ({ onSendMessage }) => {
+const ChatInterface: React.FC<{ onSendMessage: (message: string) => Promise<string> }> = ({
+  onSendMessage,
+}) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -19,7 +21,7 @@ const ChatInterface: React.FC<{onSendMessage: (message: string) => Promise<strin
   const generateMessageId = () => `msg-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
   useEffect(scrollToBottom, [messages]);
@@ -29,30 +31,30 @@ const ChatInterface: React.FC<{onSendMessage: (message: string) => Promise<strin
     const userMessage: Message = {
       id: generateMessageId(),
       text: input,
-      sender: 'user'
+      sender: 'user',
     };
-    setMessages(prev => [...prev, userMessage]);
+    setMessages((prev) => [...prev, userMessage]);
     const currentInput = input;
     setInput('');
     setIsLoading(true);
 
     try {
-        const botResponseText = await onSendMessage(currentInput);
-        const botMessage: Message = {
-          id: generateMessageId(),
-          text: botResponseText,
-          sender: 'bot'
-        };
-        setMessages(prev => [...prev, botMessage]);
-    } catch (error) {
-        const errorMessage: Message = {
-          id: generateMessageId(),
-          text: "Sorry, I encountered an error.",
-          sender: 'bot'
-        };
-        setMessages(prev => [...prev, errorMessage]);
+      const botResponseText = await onSendMessage(currentInput);
+      const botMessage: Message = {
+        id: generateMessageId(),
+        text: botResponseText,
+        sender: 'bot',
+      };
+      setMessages((prev) => [...prev, botMessage]);
+    } catch {
+      const errorMessage: Message = {
+        id: generateMessageId(),
+        text: 'Sorry, I encountered an error.',
+        sender: 'bot',
+      };
+      setMessages((prev) => [...prev, errorMessage]);
     } finally {
-        setIsLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -60,13 +62,22 @@ const ChatInterface: React.FC<{onSendMessage: (message: string) => Promise<strin
     <div className="flex flex-col h-[500px] border rounded-lg bg-white shadow-md">
       <div className="flex-1 p-4 overflow-y-auto">
         {messages.map((msg) => (
-          <div key={msg.id} className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'} mb-3`}>
-            <div className={`p-3 rounded-lg max-w-xs lg:max-w-md ${msg.sender === 'user' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}>
+          <div
+            key={msg.id}
+            className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'} mb-3`}
+          >
+            <div
+              className={`p-3 rounded-lg max-w-xs lg:max-w-md ${msg.sender === 'user' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}
+            >
               {msg.text}
             </div>
           </div>
         ))}
-        {isLoading && <div className="flex justify-start"><div className="p-3 rounded-lg bg-gray-200">...</div></div>}
+        {isLoading && (
+          <div className="flex justify-start">
+            <div className="p-3 rounded-lg bg-gray-200">...</div>
+          </div>
+        )}
         <div ref={messagesEndRef} />
       </div>
       <div className="p-4 border-t flex items-center">
@@ -80,7 +91,7 @@ const ChatInterface: React.FC<{onSendMessage: (message: string) => Promise<strin
           className="flex-1"
         />
         <Button onClick={handleSend} disabled={isLoading || !input.trim()} className="ml-2">
-            <Icon name="send" />
+          <Icon name="send" />
         </Button>
       </div>
     </div>

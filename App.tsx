@@ -26,7 +26,6 @@ const PrivateLayout = () => {
   );
 };
 
-
 const App: React.FC = () => {
   const { isAuthenticated, loading } = useAuth();
 
@@ -39,7 +38,10 @@ const App: React.FC = () => {
       <Router>
         <Routes>
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/*" element={isAuthenticated ? <PrivateRoutes /> : <Navigate to="/login" />} />
+          <Route
+            path="/*"
+            element={isAuthenticated ? <PrivateRoutes /> : <Navigate to="/login" />}
+          />
         </Routes>
       </Router>
     </ErrorBoundary>
@@ -68,6 +70,5 @@ const PrivateRoutes = () => (
     </Route>
   </Routes>
 );
-
 
 export default App;
