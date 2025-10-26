@@ -9,7 +9,15 @@ const MOCK_USER: User = {
   role: 'superadmin',
 };
 
-export const useAuth = () => {
+interface UseAuthReturn {
+  user: User | null;
+  isAuthenticated: boolean;
+  loading: boolean;
+  login: (_email?: string, _password?: string) => Promise<void>;
+  logout: () => void;
+}
+
+export const useAuth = (): UseAuthReturn => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
