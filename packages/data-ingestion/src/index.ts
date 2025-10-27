@@ -11,7 +11,8 @@ export * from './bigquery-schemas';
 export * from './bigquery-loader';
 
 // Platform-specific sync jobs
-export * from './google-ads-sync';
+export { GoogleAdsSync, type GoogleAdsSyncConfig } from './google-ads-sync';
+export { MetaSync, type MetaSyncConfig } from './meta-sync';
 
 // Scheduler configuration
 export * from './scheduler-config';

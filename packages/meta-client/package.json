@@ -1,0 +1,19 @@
+{
+  "name": "@random-truffle/meta-client",
+  "version": "0.1.0",
+  "description": "Meta Marketing API v22.0 client for Custom Audiences and Insights",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@random-truffle/activation": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.6",
+    "typescript": "^5.3.3"
+  }
+}

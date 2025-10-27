@@ -13,6 +13,7 @@
     "@random-truffle/types": "workspace:*",
     "@random-truffle/bigquery": "workspace:*",
     "@random-truffle/google-ads-client": "workspace:*",
+    "@random-truffle/meta-client": "workspace:*",
     "@google-cloud/bigquery": "^7.3.0"
   },
   "devDependencies": {
