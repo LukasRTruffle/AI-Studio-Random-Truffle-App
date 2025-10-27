@@ -17,7 +17,7 @@
     "@random-truffle/types": "workspace:*",
     "@random-truffle/core": "workspace:*",
     "@random-truffle/mcp-bigquery": "workspace:*",
-    "@google-cloud/aiplatform": "^3.35.0",
+    "@google-cloud/vertexai": "^1.9.3",
     "zod": "^3.23.8"
   },
   "devDependencies": {

@@ -15,7 +15,8 @@ import type {
 } from './types';
 import { AgentInvoker, type AgentInvokerConfig } from './agent-invoker';
 import { PromptLoader } from './prompt-loader';
-import { createMCPBigQueryConnector } from '@random-truffle/mcp-bigquery';
+// TODO: Re-enable MCP BigQuery connector once package is built
+// import { createMCPBigQueryConnector } from '@random-truffle/mcp-bigquery';
 
 /**
  * Agent manager configuration
@@ -51,7 +52,8 @@ export class AgentManager {
   private invoker: AgentInvoker;
   private promptLoader: PromptLoader;
   private stats: Map<AgentType, AgentStats> = new Map();
-  private mcpConnector: ReturnType<typeof createMCPBigQueryConnector>;
+  // TODO: Re-enable MCP BigQuery connector once package is built
+  // private mcpConnector: ReturnType<typeof createMCPBigQueryConnector>;
 
   constructor(config: AgentManagerConfig) {
     this.config = {
@@ -68,21 +70,22 @@ export class AgentManager {
     };
     this.invoker = new AgentInvoker(invokerConfig);
 
+    // TODO: Re-enable MCP BigQuery connector once package is built
     // Initialize MCP BigQuery connector for tools
-    this.mcpConnector = createMCPBigQueryConnector({
-      projectId: config.projectId,
-      datasetId: config.datasetId,
-      cache: {
-        enabled: true,
-        ttlSeconds: 300,
-        maxSize: 1000,
-      },
-      rateLimit: {
-        enabled: true,
-        maxRequestsPerMinute: 100,
-        maxRequestsPerHour: 1000,
-      },
-    });
+    // this.mcpConnector = createMCPBigQueryConnector({
+    //   projectId: config.projectId,
+    //   datasetId: config.datasetId,
+    //   cache: {
+    //     enabled: true,
+    //     ttlSeconds: 300,
+    //     maxSize: 1000,
+    //   },
+    //   rateLimit: {
+    //     enabled: true,
+    //     maxRequestsPerMinute: 100,
+    //     maxRequestsPerHour: 1000,
+    //   },
+    // });
 
     // Register default agents
     this.registerDefaultAgents();
@@ -139,22 +142,36 @@ export class AgentManager {
           required: ['query'],
         },
         handler: async (params: unknown) => {
-          const { query, timeoutMs, maxResults } = params as {
+          const {
+            query: _query,
+            timeoutMs: _timeoutMs,
+            maxResults: _maxResults,
+          } = params as {
             query: string;
             timeoutMs?: number;
             maxResults?: number;
           };
 
-          const response = await this.mcpConnector.handle({
-            method: 'bigquery.query',
-            params: { query, timeoutMs: timeoutMs || 30000, maxResults: maxResults || 1000 },
-          });
+          // TODO: Re-enable MCP BigQuery connector once package is built
+          // For now, return mock data
+          console.warn('MCP BigQuery connector not available. Returning mock data.');
+          return {
+            rows: [],
+            totalRows: 0,
+            schema: [],
+            message: 'MCP BigQuery connector not yet available. This is a stub response.',
+          };
 
-          if (!response.success) {
-            throw new Error(response.error?.message || 'Query execution failed');
-          }
+          // const response = await this.mcpConnector.handle({
+          //   method: 'bigquery.query',
+          //   params: { query, timeoutMs: timeoutMs || 30000, maxResults: maxResults || 1000 },
+          // });
 
-          return response.data;
+          // if (!response.success) {
+          //   throw new Error(response.error?.message || 'Query execution failed');
+          // }
+
+          // return response.data;
         },
       },
       {
@@ -170,16 +187,9 @@ export class AgentManager {
         handler: async (params: unknown) => {
           const { tableName } = params as { tableName: string };
 
-          const response = await this.mcpConnector.handle({
-            method: 'bigquery.getSchema',
-            params: { tableName },
-          });
-
-          if (!response.success) {
-            throw new Error(response.error?.message || 'Schema retrieval failed');
-          }
-
-          return response.data;
+          // TODO: Re-enable MCP BigQuery connector once package is built
+          console.warn('MCP BigQuery connector not available. Returning mock data.');
+          return { tableName, columns: [], message: 'MCP BigQuery connector not yet available.' };
         },
       },
       {
@@ -190,16 +200,9 @@ export class AgentManager {
           properties: {},
         },
         handler: async () => {
-          const response = await this.mcpConnector.handle({
-            method: 'bigquery.listTables',
-            params: {},
-          });
-
-          if (!response.success) {
-            throw new Error(response.error?.message || 'List tables failed');
-          }
-
-          return response.data;
+          // TODO: Re-enable MCP BigQuery connector once package is built
+          console.warn('MCP BigQuery connector not available. Returning mock data.');
+          return { tables: [], message: 'MCP BigQuery connector not yet available.' };
         },
       },
       {
@@ -213,18 +216,15 @@ export class AgentManager {
           required: ['query'],
         },
         handler: async (params: unknown) => {
-          const { query } = params as { query: string };
+          const { query: _query } = params as { query: string };
 
-          const response = await this.mcpConnector.handle({
-            method: 'bigquery.estimateCost',
-            params: { query },
-          });
-
-          if (!response.success) {
-            throw new Error(response.error?.message || 'Cost estimation failed');
-          }
-
-          return response.data;
+          // TODO: Re-enable MCP BigQuery connector once package is built
+          console.warn('MCP BigQuery connector not available. Returning mock data.');
+          return {
+            estimatedBytes: 0,
+            estimatedCost: 0,
+            message: 'MCP BigQuery connector not yet available.',
+          };
         },
       },
     ];

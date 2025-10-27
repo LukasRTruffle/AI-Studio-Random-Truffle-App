@@ -5,17 +5,18 @@
  * Supports Vertex AI Conversational Agents (synchronous API).
  */
 
+import { VertexAI, HarmCategory, HarmBlockThreshold } from '@google-cloud/vertexai';
 import type {
   AgentConfig,
   AgentRequest,
   AgentResponse,
   AgentError,
-  AgentErrorCode,
   AIModel,
   ConversationMessage,
   ToolCall,
   TokenUsage,
 } from './types';
+import { AgentErrorCode } from './types';
 import { PromptLoader } from './prompt-loader';
 
 /**
@@ -54,6 +55,7 @@ export interface AgentInvokerConfig {
 export class AgentInvoker {
   private config: Required<AgentInvokerConfig>;
   private promptLoader: PromptLoader;
+  private vertexAI: VertexAI;
 
   constructor(config: AgentInvokerConfig) {
     this.config = {
@@ -63,6 +65,12 @@ export class AgentInvoker {
       defaultMaxRetries: config.defaultMaxRetries || 3,
     };
     this.promptLoader = this.config.promptLoader;
+
+    // Initialize Vertex AI client
+    this.vertexAI = new VertexAI({
+      project: config.projectId,
+      location: config.region,
+    });
   }
 
   /**
@@ -115,7 +123,7 @@ export class AgentInvoker {
     // All retries failed
     const responseTimeMs = Date.now() - startTime;
     return this.errorResponse(
-      'MODEL_ERROR',
+      AgentErrorCode.MODEL_ERROR,
       `Failed to invoke agent after ${retryCount} retries: ${lastError?.message || 'Unknown error'}`,
       requestId,
       responseTimeMs,
@@ -149,9 +157,8 @@ export class AgentInvoker {
     // Validate request against guardrails
     this.validateRequest(request, systemPrompt);
 
-    // Invoke model (mock implementation for now)
-    // TODO: Replace with actual Vertex AI API call
-    const response = await this.mockModelInvocation(messages, model, config);
+    // Invoke Vertex AI model
+    const response = await this.invokeVertexAI(messages, model, config);
 
     return {
       success: true,
@@ -224,36 +231,127 @@ export class AgentInvoker {
   }
 
   /**
-   * Mock model invocation (for testing)
-   * TODO: Replace with actual Vertex AI API integration
+   * Invoke Vertex AI model
    *
    * @param messages - Conversation messages
    * @param model - Model to invoke
    * @param config - Agent configuration
-   * @returns Mock response
+   * @returns Model response
    */
-  private async mockModelInvocation(
+  private async invokeVertexAI(
     messages: ConversationMessage[],
     model: AIModel,
-    _config: AgentConfig
+    config: AgentConfig
   ): Promise<{
     message: string;
     toolCalls?: ToolCall[];
     usage: TokenUsage;
   }> {
-    // Simulate API delay
-    await this.sleep(500);
+    // Map our model names to Vertex AI model names
+    const modelNameMap: Record<string, string> = {
+      'gemini-1.5-pro': 'gemini-1.5-pro-002',
+      'gemini-1.5-flash': 'gemini-1.5-flash-002',
+      'gemini-pro': 'gemini-1.0-pro-002',
+      'gpt-4': 'gpt-4', // If using OpenAI via Vertex AI
+    };
 
-    const userMessage = messages[messages.length - 1].content;
+    const vertexModelName = modelNameMap[model] || model;
+
+    // Get generative model
+    const generativeModel = this.vertexAI.getGenerativeModel({
+      model: vertexModelName,
+      generationConfig: {
+        maxOutputTokens: config.maxOutputTokens || 4096,
+        temperature: 0.7,
+        topP: 0.95,
+        topK: 40,
+      },
+      safetySettings: [
+        {
+          category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
+          threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
+        },
+        {
+          category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
+          threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
+        },
+        {
+          category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
+          threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
+        },
+        {
+          category: HarmCategory.HARM_CATEGORY_HARASSMENT,
+          threshold: HarmBlockThreshold.BLOCK_MEDIUM_AND_ABOVE,
+        },
+      ],
+    });
+
+    // Build chat session or single request
+    // For conversation history, we use chat
+    if (messages.length > 2) {
+      // Has history beyond system + user message
+      const chat = generativeModel.startChat({
+        history: messages
+          .slice(0, -1) // All except last message
+          .filter((msg) => msg.role !== 'system') // Remove system messages from history
+          .map((msg) => ({
+            role: msg.role === 'user' ? 'user' : 'model',
+            parts: [{ text: msg.content }],
+          })),
+      });
+
+      const userMessage = messages[messages.length - 1].content;
+      const result = await chat.sendMessage(userMessage);
+      const response = result.response;
+
+      return {
+        message: response.candidates?.[0]?.content?.parts?.[0]?.text || '',
+        usage: this.extractUsageMetrics(response.usageMetadata),
+      };
+    } else {
+      // Single turn request with system prompt
+      const systemMessage = messages.find((m) => m.role === 'system');
+      const userMessage = messages.find((m) => m.role === 'user');
+
+      const prompt = systemMessage
+        ? `${systemMessage.content}\n\nUser: ${userMessage?.content || ''}`
+        : userMessage?.content || '';
+
+      const result = await generativeModel.generateContent(prompt);
+      const response = result.response;
+
+      return {
+        message: response.candidates?.[0]?.content?.parts?.[0]?.text || '',
+        usage: this.extractUsageMetrics(response.usageMetadata),
+      };
+    }
+  }
+
+  /**
+   * Extract usage metrics from Vertex AI response
+   *
+   * @param usageMetadata - Usage metadata from Vertex AI
+   * @returns Token usage
+   */
+  private extractUsageMetrics(usageMetadata: unknown): TokenUsage {
+    const metadata = usageMetadata as
+      | { promptTokenCount?: number; candidatesTokenCount?: number; totalTokenCount?: number }
+      | undefined;
+    const inputTokens = metadata?.promptTokenCount || 0;
+    const outputTokens = metadata?.candidatesTokenCount || 0;
+    const totalTokens = metadata?.totalTokenCount || inputTokens + outputTokens;
+
+    // Rough cost estimation (Gemini 1.5 Pro pricing as of 2024)
+    // $0.00125 per 1K input tokens, $0.005 per 1K output tokens
+    const inputCost = (inputTokens / 1000) * 0.00125;
+    const outputCost = (outputTokens / 1000) * 0.005;
+    const estimatedCost = inputCost + outputCost;
 
     return {
-      message: `[Mock Response from ${model}] Received your request: "${userMessage}". This is a placeholder response until Vertex AI integration is complete.`,
-      usage: {
-        inputTokens: 1000,
-        outputTokens: 100,
-        totalTokens: 1100,
-        estimatedCost: 0.001,
-      },
+      inputTokens,
+      outputTokens,
+      totalTokens,
+      estimatedCost,
     };
   }
 
