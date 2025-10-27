@@ -1,6 +1,12 @@
 import React from 'react';
 import Icon from '../Icon';
-import { KpiData } from '../../types';
+
+interface KpiData {
+  title: string;
+  value: string;
+  change: number;
+  changeType: 'increase' | 'decrease';
+}
 
 const KpiCard: React.FC<KpiData> = ({ title, value, change, changeType }) => {
   const isIncrease = changeType === 'increase';

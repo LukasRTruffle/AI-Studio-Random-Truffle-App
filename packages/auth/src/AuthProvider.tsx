@@ -1,8 +1,9 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { oktaAuth, isOktaConfigured } from './okta-config';
-import type { User, UserRole, AuthSession } from '@random-truffle/types';
+import { UserRole } from '@random-truffle/types';
+import type { User, AuthSession } from '@random-truffle/types';
 
 interface AuthContextType {
   user: User | null;
@@ -53,8 +54,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
             id: userInfo.sub || '',
             email: userInfo.email || '',
             name: userInfo.name || userInfo.email || '',
-            role: (userInfo.role as UserRole) || 'user',
-            tenantId: userInfo.tenantId || 'default',
+            role: (userInfo.role as UserRole) || UserRole.USER,
+            tenantId: userInfo.tenantId ? String(userInfo.tenantId) : 'default',
             createdAt: new Date(),
             updatedAt: new Date(),
           };
@@ -105,8 +106,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
     const placeholderUser: User = {
       id: '1',
       email,
-      name: email.split('@')[0],
-      role: 'user',
+      name: email.split('@')[0] || email,
+      role: UserRole.USER,
       tenantId: 'default',
       createdAt: new Date(),
       updatedAt: new Date(),

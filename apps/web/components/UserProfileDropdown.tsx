@@ -46,8 +46,8 @@ export function UserProfileDropdown() {
         .toUpperCase()
         .slice(0, 2);
     }
-    if (user.email) {
-      return user.email[0].toUpperCase();
+    if (user.email && user.email.length > 0) {
+      return user.email[0]!.toUpperCase();
     }
     return 'U';
   };

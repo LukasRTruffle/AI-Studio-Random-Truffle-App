@@ -1,5 +1,11 @@
 import { useState, useEffect, useCallback } from 'react';
-import { User } from '../types';
+
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+  role: 'user' | 'admin' | 'superadmin';
+}
 
 // In a real app, you wouldn't hardcode this. This is for demonstration.
 const MOCK_USER: User = {

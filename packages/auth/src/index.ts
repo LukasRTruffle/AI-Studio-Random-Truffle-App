@@ -6,4 +6,4 @@ export * from './okta-client';
 export * from './okta-config';
 export * from './AuthProvider';
 export * from './useAuth';
-export * from './ProtectedRoute';
+// export * from './ProtectedRoute'; // Legacy - moved to apps/web

@@ -215,11 +215,18 @@ export default function ActivationWizardPage() {
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
       // Go to first enabled channel config
-      const firstChannel = enabledChannels[0].channel;
+      if (enabledChannels.length === 0) {
+        addAgentMessage('No channels selected. Please select at least one channel.');
+        setIsLoading(false);
+        return;
+      }
+
+      const firstEnabledChannel = enabledChannels[0]!;
+      const firstChannel = firstEnabledChannel.channel;
       setStep(`configure-${firstChannel}` as ActivationStep);
 
       addAgentMessage(
-        `Excellent! Let&apos;s configure ${enabledChannels[0].channel === 'google-ads' ? 'Google Ads' : enabledChannels[0].channel === 'meta' ? 'Meta' : 'TikTok'}.\n\n` +
+        `Excellent! Let&apos;s configure ${firstEnabledChannel.channel === 'google-ads' ? 'Google Ads' : firstEnabledChannel.channel === 'meta' ? 'Meta' : 'TikTok'}.\n\n` +
           `What would you like to name this audience on the platform?`
       );
     } catch {
@@ -257,7 +264,7 @@ export default function ActivationWizardPage() {
       );
 
       if (remainingChannels.length > 0) {
-        const nextChannel = remainingChannels[0].channel;
+        const nextChannel = remainingChannels[0]!.channel;
         setStep(`configure-${nextChannel}` as ActivationStep);
         addAgentMessage(
           `✅ ${channel} configured! Estimated match rate: **${estimatedMatchRate.toFixed(1)}%**\n\n` +

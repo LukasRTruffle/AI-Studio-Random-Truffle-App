@@ -1,7 +1,13 @@
 // TODO: Migrate to Recharts (ADR-003) - Chart.js removed in Phase 0
 // This file is temporarily disabled until Recharts migration is complete
 
-import { ChartData } from '../types';
+interface ChartData {
+  labels: string[];
+  datasets: Array<{
+    label: string;
+    data: number[];
+  }>;
+}
 
 interface LineChartProps {
   data: ChartData;

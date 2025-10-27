@@ -30,33 +30,33 @@ export default function AnalyticsPage() {
   // Format KPI data for cards
   const kpiData = [
     {
-      label: 'Total Users',
+      title: 'Total Users',
       value: loading ? '...' : aggregated.totalUsers.toLocaleString(),
-      change: '+0.0%', // TODO: Calculate from previous period
-      isPositive: true,
+      change: 0.0, // TODO: Calculate from previous period
+      changeType: 'increase' as const,
     },
     {
-      label: 'Total Sessions',
+      title: 'Total Sessions',
       value: loading ? '...' : aggregated.totalSessions.toLocaleString(),
-      change: '+0.0%',
-      isPositive: true,
+      change: 0.0,
+      changeType: 'increase' as const,
     },
     {
-      label: 'Total Revenue',
+      title: 'Total Revenue',
       value: loading
         ? '...'
         : `$${aggregated.totalRevenue.toLocaleString(undefined, {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2,
           })}`,
-      change: '+0.0%',
-      isPositive: true,
+      change: 0.0,
+      changeType: 'increase' as const,
     },
     {
-      label: 'Conversion Rate',
+      title: 'Conversion Rate',
       value: loading ? '...' : `${(aggregated.conversionRate * 100).toFixed(2)}%`,
-      change: '+0.0%',
-      isPositive: true,
+      change: 0.0,
+      changeType: 'increase' as const,
     },
   ];
 
