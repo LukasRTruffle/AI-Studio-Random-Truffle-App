@@ -5,8 +5,7 @@ import PageHeader from '../../../components/ui/PageHeader';
 import DataTable from '../../../components/ui/DataTable';
 import Button from '../../../components/ui/Button';
 import StatusPill from '../../../components/ui/StatusPill';
-import { audienceData } from '../../../data/mockData';
-import { Audience } from '../../../types';
+import { audienceData, type Audience } from '../../../data/mockData';
 import Icon from '../../../components/Icon';
 
 export default function AudiencesPage() {
