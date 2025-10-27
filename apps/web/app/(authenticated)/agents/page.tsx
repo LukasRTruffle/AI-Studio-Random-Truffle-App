@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { PageHeader } from '@/components/layout/PageHeader';
+import PageHeader from '@/components/PageHeader';
 import { useAgentChat, type AgentType, type ConversationMessage } from '@/hooks/useAgentChat';
 
 /**

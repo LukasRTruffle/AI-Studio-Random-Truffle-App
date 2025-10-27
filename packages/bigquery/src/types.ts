@@ -136,6 +136,15 @@ export interface QueryResult<T = unknown> {
 }
 
 /**
+ * BigQuery query cost estimation result
+ */
+export interface QueryCostEstimate {
+  estimatedBytes: number;
+  estimatedCost: number;
+  message?: string;
+}
+
+/**
  * BigQuery table schema
  */
 export interface TableSchema {

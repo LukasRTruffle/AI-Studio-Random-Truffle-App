@@ -30,7 +30,12 @@ const DEFAULT_CONFIG: Partial<MCPConnectorConfig> = {
     maxRequestsPerMinute: 100,
     maxRequestsPerHour: 1000,
   },
-  allowedMethods: ['bigquery.query', 'bigquery.listTables', 'bigquery.getSchema'],
+  allowedMethods: [
+    'bigquery.query',
+    'bigquery.listTables',
+    'bigquery.getSchema',
+    'bigquery.estimateCost',
+  ],
 };
 
 /**
@@ -107,6 +112,9 @@ export class MCPBigQueryConnector {
         case 'bigquery.getSchema':
           result = (await this.handleGetSchema(request as MCPGetSchemaRequest)) as T;
           break;
+        case 'bigquery.estimateCost':
+          result = (await this.handleEstimateCost(request as MCPQueryRequest)) as T;
+          break;
         default:
           return this.errorResponse(
             'UNKNOWN_METHOD',
@@ -161,6 +169,14 @@ export class MCPBigQueryConnector {
   }
 
   /**
+   * Handle bigquery.estimateCost request
+   */
+  private async handleEstimateCost(request: MCPQueryRequest): Promise<unknown> {
+    const { query } = request.params;
+    return await this.client.estimateQueryCost(query);
+  }
+
+  /**
    * Check if method is allowed
    */
   private isMethodAllowed(method: string): boolean {
@@ -193,12 +209,12 @@ export class MCPBigQueryConnector {
   /**
    * Create error response
    */
-  private errorResponse(
+  private errorResponse<T = unknown>(
     code: string,
     message: string,
     startTime: number,
     details?: Record<string, unknown>
-  ): MCPResponse {
+  ): MCPResponse<T> {
     const executionTimeMs = Date.now() - startTime;
 
     return {
@@ -211,7 +227,7 @@ export class MCPBigQueryConnector {
       metadata: {
         executionTimeMs,
       },
-    };
+    } as MCPResponse<T>;
   }
 
   /**

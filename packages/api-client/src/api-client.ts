@@ -1,4 +1,5 @@
 import type { User, CreateUserDto, UpdateUserDto, ApiResponse } from '@random-truffle/types';
+import type { AgentRequest, AgentResponse } from '@random-truffle/agents';
 import { API_CONFIG } from '@random-truffle/core';
 
 export class ApiClient {
@@ -91,6 +92,14 @@ export class ApiClient {
   // Health check
   async getHealth(): Promise<ApiResponse<{ status: string; timestamp: string }>> {
     return this.fetch('/health');
+  }
+
+  // Agent endpoints
+  async invokeAgent(request: AgentRequest): Promise<ApiResponse<AgentResponse>> {
+    return this.fetch<AgentResponse>('/agents/invoke', {
+      method: 'POST',
+      body: JSON.stringify(request),
+    });
   }
 }
 

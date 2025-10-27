@@ -3,7 +3,14 @@
  */
 
 import { BigQuery, Query } from '@google-cloud/bigquery';
-import type { BigQueryConfig, QueryOptions, QueryResult, TableSchema, TableField } from './types';
+import type {
+  BigQueryConfig,
+  QueryOptions,
+  QueryResult,
+  TableSchema,
+  TableField,
+  QueryCostEstimate,
+} from './types';
 import {
   DEFAULT_BIGQUERY_CONFIG,
   QUERY_TIMEOUT_MS,
@@ -48,10 +55,10 @@ export class BigQueryClient {
     this.validateQuery(query);
 
     // Estimate query cost
-    const estimatedBytes = await this.estimateQueryCost(query);
-    if (estimatedBytes > QUERY_COST_THRESHOLDS.ERROR) {
+    const costEstimate = await this.estimateQueryCost(query);
+    if (costEstimate.estimatedBytes > QUERY_COST_THRESHOLDS.ERROR) {
       throw new Error(
-        `Query would process ${this.formatBytes(estimatedBytes)} which exceeds the limit of ${this.formatBytes(QUERY_COST_THRESHOLDS.ERROR)}`
+        `Query would process ${this.formatBytes(costEstimate.estimatedBytes)} which exceeds the limit of ${this.formatBytes(QUERY_COST_THRESHOLDS.ERROR)}`
       );
     }
 
@@ -60,7 +67,7 @@ export class BigQueryClient {
     const queryOptions: Query = {
       query,
       params,
-      timeoutMs,
+      jobTimeoutMs: timeoutMs,
       maxResults,
       useLegacySql,
     };
@@ -72,12 +79,12 @@ export class BigQueryClient {
 
     return {
       rows: rows as T[],
-      totalRows: parseInt(response.totalRows || '0', 10),
-      pageToken: response.pageToken,
+      totalRows: parseInt(response?.totalRows || '0', 10),
+      pageToken: response?.pageToken,
       jobId: job.id || '',
       executionTimeMs,
-      bytesProcessed: parseInt(response.totalBytesProcessed || '0', 10),
-      cacheHit: response.cacheHit || false,
+      bytesProcessed: parseInt(response?.totalBytesProcessed || '0', 10),
+      cacheHit: response?.cacheHit || false,
     };
   }
 
@@ -140,22 +147,35 @@ export class BigQueryClient {
   }
 
   /**
-   * Estimate query cost (bytes to be processed)
+   * Estimate query cost (bytes to be processed and cost in USD)
    * @param query SQL query
-   * @returns Estimated bytes to process
+   * @returns Cost estimation with bytes and estimated cost
    */
-  private async estimateQueryCost(query: string): Promise<number> {
+  async estimateQueryCost(query: string): Promise<QueryCostEstimate> {
     try {
       const [job] = await this.client.createQueryJob({
         query,
         dryRun: true,
       });
 
-      return parseInt(job.metadata.statistics?.totalBytesProcessed || '0', 10);
+      const estimatedBytes = parseInt(job.metadata.statistics?.totalBytesProcessed || '0', 10);
+
+      // BigQuery pricing: $5 per TB processed (as of 2025)
+      const estimatedCost = (estimatedBytes / (1024 * 1024 * 1024 * 1024)) * 5;
+
+      return {
+        estimatedBytes,
+        estimatedCost,
+        message: `Query will process ${this.formatBytes(estimatedBytes)} at an estimated cost of $${estimatedCost.toFixed(4)}`,
+      };
     } catch (error) {
       // If dry run fails, return 0 and let the actual query handle the error
       console.warn('Failed to estimate query cost:', error);
-      return 0;
+      return {
+        estimatedBytes: 0,
+        estimatedCost: 0,
+        message: 'Failed to estimate query cost. The query may be invalid.',
+      };
     }
   }
 
