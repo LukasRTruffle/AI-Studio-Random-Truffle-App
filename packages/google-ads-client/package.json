@@ -1,0 +1,21 @@
+{
+  "name": "@random-truffle/google-ads-client",
+  "version": "0.1.0",
+  "description": "Google Ads API v22 client for Random Truffle (Customer Match + Reporting)",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf dist",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@random-truffle/types": "workspace:*",
+    "@random-truffle/activation": "workspace:*",
+    "googleapis": "^137.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "typescript": "^5.3.3"
+  }
+}
