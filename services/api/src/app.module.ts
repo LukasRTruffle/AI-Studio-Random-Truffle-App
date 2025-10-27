@@ -8,6 +8,7 @@ import { AnalyticsModule } from './analytics/analytics.module';
 import { AgentsModule } from './agents/agents.module';
 import { AuthModule } from './auth/auth.module';
 import { TenantsModule } from './tenants/tenants.module';
+import { ActivationModule } from './activation/activation.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { TenantsModule } from './tenants/tenants.module';
     TenantsModule,
     AnalyticsModule,
     AgentsModule,
+    ActivationModule,
   ],
   controllers: [AppController],
   providers: [AppService],
