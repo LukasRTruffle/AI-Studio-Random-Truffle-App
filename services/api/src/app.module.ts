@@ -9,6 +9,7 @@ import { AgentsModule } from './agents/agents.module';
 import { AuthModule } from './auth/auth.module';
 import { TenantsModule } from './tenants/tenants.module';
 import { ActivationModule } from './activation/activation.module';
+import { PlatformConnectionsModule } from './platform-connections/platform-connections.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { ActivationModule } from './activation/activation.module';
     AuthModule,
     UsersModule,
     TenantsModule,
+    PlatformConnectionsModule,
     AnalyticsModule,
     AgentsModule,
     ActivationModule,
