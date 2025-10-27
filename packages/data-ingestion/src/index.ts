@@ -13,6 +13,7 @@ export * from './bigquery-loader';
 // Platform-specific sync jobs
 export { GoogleAdsSync, type GoogleAdsSyncConfig } from './google-ads-sync';
 export { MetaSync, type MetaSyncConfig } from './meta-sync';
+export { TikTokSync, type TikTokSyncConfig } from './tiktok-sync';
 
 // Scheduler configuration
 export * from './scheduler-config';

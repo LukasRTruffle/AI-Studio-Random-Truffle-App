@@ -312,6 +312,9 @@ importers:
       '@random-truffle/meta-client':
         specifier: workspace:*
         version: link:../meta-client
+      '@random-truffle/tiktok-client':
+        specifier: workspace:*
+        version: link:../tiktok-client
       '@random-truffle/types':
         specifier: workspace:*
         version: link:../types
@@ -384,6 +387,19 @@ importers:
         version: 2.1.9(@types/node@20.19.23)(lightningcss@1.30.2)(terser@5.44.0)
 
   packages/meta-client:
+    dependencies:
+      '@random-truffle/activation':
+        specifier: workspace:*
+        version: link:../activation
+    devDependencies:
+      '@types/node':
+        specifier: ^20.10.6
+        version: 20.19.23
+      typescript:
+        specifier: ^5.3.3
+        version: 5.8.3
+
+  packages/tiktok-client:
     dependencies:
       '@random-truffle/activation':
         specifier: workspace:*

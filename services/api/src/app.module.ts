@@ -7,6 +7,7 @@ import { UsersModule } from './users/users.module';
 import { AnalyticsModule } from './analytics/analytics.module';
 import { AgentsModule } from './agents/agents.module';
 import { AuthModule } from './auth/auth.module';
+import { TenantsModule } from './tenants/tenants.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { AuthModule } from './auth/auth.module';
     // Feature modules
     AuthModule,
     UsersModule,
+    TenantsModule,
     AnalyticsModule,
     AgentsModule,
   ],

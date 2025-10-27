@@ -1,23 +1,31 @@
 /**
  * TikTok Business API v1.3 Client
+ *
+ * Exports:
+ * - TikTokOAuthClient: OAuth 2.0 flow
+ * - TikTokSegmentsClient: Custom Audiences (Segments) API
+ * - TikTokReportingClient: Reporting API (campaign performance)
+ * - TikTokActivator: Activation orchestrator
+ * - Types: All TikTok API types
  */
 
-export * from './types';
-import type { TikTokOAuthConfig } from './types';
+export { TikTokOAuthClient } from './oauth-client';
+export { TikTokSegmentsClient } from './segments-api';
+export { TikTokReportingClient } from './reporting-api';
+export { TikTokActivator } from './tiktok-activator';
 
-// Placeholder exports - to be implemented
-export class TikTokOAuthClient {
-  constructor(private config: TikTokOAuthConfig) {}
-}
-
-export class TikTokSegmentsClient {
-  constructor(private accessToken: string) {}
-}
-
-export class TikTokReportingClient {
-  constructor(private accessToken: string) {}
-}
-
-export class TikTokActivator {
-  constructor(private config: unknown) {}
-}
+export type {
+  TikTokOAuthConfig,
+  TikTokOAuthTokens,
+  TikTokAdvertiserId,
+  TikTokSegmentId,
+  TikTokIdentifierType,
+  SegmentType,
+  CreateSegmentRequest,
+  SegmentResponse,
+  UploadIdentifiersRequest,
+  UploadIdentifiersResponse,
+  TikTokCampaignPerformance,
+  TikTokApiError,
+  TikTokApiResponse,
+} from './types';
