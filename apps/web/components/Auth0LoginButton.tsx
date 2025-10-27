@@ -23,7 +23,7 @@ export function Auth0LoginButton() {
           <span className="font-medium">{user.name}</span>
         </div>
         <Link
-          href="/api/auth/logout"
+          href="/auth/logout"
           className="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors"
         >
           Logout
@@ -34,7 +34,7 @@ export function Auth0LoginButton() {
 
   return (
     <Link
-      href="/api/auth/login"
+      href="/auth/login"
       className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
     >
       Login
