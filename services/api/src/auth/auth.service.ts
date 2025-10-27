@@ -5,7 +5,6 @@
  */
 
 import { Injectable, UnauthorizedException, Logger } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 // Okta imports disabled until Phase 1 - auth package has type errors
@@ -19,7 +18,6 @@ export class AuthService {
   // private oktaClient: OktaClient; // Disabled until Phase 1
 
   constructor(
-    private readonly configService: ConfigService,
     @InjectRepository(SessionEntity)
     private readonly sessionRepository: Repository<SessionEntity>
   ) {
@@ -50,6 +48,7 @@ export class AuthService {
 
   /**
    * Handle OAuth callback and create session
+   * TODO: Implement in Phase 1
    *
    * @param code - Authorization code from Okta
    * @param userAgent - User agent string
@@ -57,127 +56,65 @@ export class AuthService {
    * @returns Auth response with tokens
    */
   async handleCallback(
-    code: string,
-    userAgent?: string,
-    ipAddress?: string
+    _code: string,
+    _userAgent?: string,
+    _ipAddress?: string
   ): Promise<AuthResponseDto> {
-    this.logger.log('Handling OAuth callback');
-
-    try {
-      // Exchange code for tokens
-      const tokens = await this.oktaClient.exchangeCodeForTokens(code);
-
-      // Verify ID token and extract user
-      const payload = await this.oktaClient.verifyIdToken(tokens.idToken);
-      const user = this.oktaClient.extractUser(payload);
-
-      // Create session in database
-      const expiresAt = new Date(Date.now() + tokens.expiresIn * 1000);
-      await this.createSession(
-        user,
-        tokens.accessToken,
-        tokens.idToken,
-        tokens.refreshToken,
-        expiresAt,
-        userAgent,
-        ipAddress
-      );
-
-      this.logger.log(`Session created for user ${user.sub}`);
-
-      return {
-        user: this.mapToUserResponse(user),
-        accessToken: tokens.accessToken,
-        refreshToken: tokens.refreshToken,
-        expiresIn: tokens.expiresIn,
-      };
-    } catch (error) {
-      this.logger.error('Failed to handle callback', error);
-      throw new UnauthorizedException('Authentication failed');
-    }
+    throw new UnauthorizedException(
+      'Authentication not yet implemented - Phase 1. Use Auth0 for POC demo.'
+    );
   }
 
   /**
    * Verify access token and get user
+   * TODO: Implement in Phase 1
    *
    * @param accessToken - Access token
    * @returns User information
    */
-  async verifyToken(accessToken: string): Promise<OktaUser> {
-    try {
-      const payload = await this.oktaClient.verifyAccessToken(accessToken);
-      return this.oktaClient.extractUser(payload);
-    } catch (error) {
-      this.logger.error('Token verification failed', error);
-      throw new UnauthorizedException('Invalid or expired token');
-    }
+  async verifyToken(_accessToken: string): Promise<UserResponseDto> {
+    throw new UnauthorizedException(
+      'Authentication not yet implemented - Phase 1. Use Auth0 for POC demo.'
+    );
   }
 
   /**
    * Refresh access token
+   * TODO: Implement in Phase 1
    *
    * @param refreshToken - Refresh token
    * @returns New access token and expiration
    */
-  async refreshAccessToken(refreshToken: string): Promise<{
+  async refreshAccessToken(_refreshToken: string): Promise<{
     accessToken: string;
     expiresIn: number;
   }> {
-    try {
-      const tokens = await this.oktaClient.refreshAccessToken(refreshToken);
-
-      // Update session with new tokens
-      const session = await this.sessionRepository.findOne({
-        where: { refreshToken },
-      });
-
-      if (session) {
-        session.accessToken = tokens.accessToken;
-        session.idToken = tokens.idToken;
-        session.expiresAt = new Date(Date.now() + tokens.expiresIn * 1000);
-        session.lastAccessedAt = new Date();
-        await this.sessionRepository.save(session);
-      }
-
-      return {
-        accessToken: tokens.accessToken,
-        expiresIn: tokens.expiresIn,
-      };
-    } catch (error) {
-      this.logger.error('Token refresh failed', error);
-      throw new UnauthorizedException('Failed to refresh token');
-    }
+    throw new UnauthorizedException(
+      'Authentication not yet implemented - Phase 1. Use Auth0 for POC demo.'
+    );
   }
 
   /**
    * Logout user and revoke tokens
+   * TODO: Implement in Phase 1
    *
    * @param accessToken - Access token
    */
-  async logout(accessToken: string): Promise<void> {
-    try {
-      // Revoke token in Okta
-      await this.oktaClient.revokeToken(accessToken, 'access_token');
-
-      // Delete session from database
-      await this.sessionRepository.delete({ accessToken });
-
-      this.logger.log('User logged out successfully');
-    } catch (error) {
-      this.logger.error('Logout failed', error);
-      throw new Error('Failed to logout');
-    }
+  async logout(_accessToken: string): Promise<void> {
+    throw new UnauthorizedException(
+      'Authentication not yet implemented - Phase 1. Use Auth0 for POC demo.'
+    );
   }
 
   /**
    * Get current user from access token
+   * TODO: Implement in Phase 1
    *
    * @param accessToken - Access token
    * @returns User information
    */
   async getCurrentUser(accessToken: string): Promise<UserResponseDto> {
-    const user = await this.verifyToken(accessToken);
-    return this.mapToUserResponse(user);
+    return this.verifyToken(accessToken);
   }
 
   /**
@@ -201,59 +138,6 @@ export class AuthService {
       expiresAt: session.expiresAt.toISOString(),
       createdAt: session.createdAt.toISOString(),
       lastAccessedAt: session.lastAccessedAt.toISOString(),
-    };
-  }
-
-  /**
-   * Create session in database
-   *
-   * @param user - Okta user
-   * @param accessToken - Access token
-   * @param idToken - ID token
-   * @param refreshToken - Refresh token
-   * @param expiresAt - Expiration date
-   * @param userAgent - User agent
-   * @param ipAddress - IP address
-   * @returns Session entity
-   */
-  private async createSession(
-    user: OktaUser,
-    accessToken: string,
-    idToken: string,
-    refreshToken: string | undefined,
-    expiresAt: Date,
-    userAgent?: string,
-    ipAddress?: string
-  ): Promise<SessionEntity> {
-    const session = this.sessionRepository.create({
-      userId: user.sub,
-      accessToken,
-      refreshToken: refreshToken || null,
-      idToken,
-      expiresAt,
-      userAgent: userAgent || null,
-      ipAddress: ipAddress || null,
-    });
-
-    return this.sessionRepository.save(session);
-  }
-
-  /**
-   * Map Okta user to user response DTO
-   *
-   * @param user - Okta user
-   * @returns User response DTO
-   */
-  private mapToUserResponse(user: OktaUser): UserResponseDto {
-    return {
-      id: user.sub,
-      email: user.email,
-      name: user.name,
-      given_name: user.given_name,
-      family_name: user.family_name,
-      picture: user.picture,
-      roles: user.roles || ['user'],
-      tenantId: user.tenantId,
     };
   }
 

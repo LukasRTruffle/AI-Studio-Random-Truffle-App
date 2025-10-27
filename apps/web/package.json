@@ -16,11 +16,12 @@
     "test:e2e:debug": "playwright test --debug"
   },
   "dependencies": {
-    "@random-truffle/types": "workspace:*",
-    "@random-truffle/core": "workspace:*",
-    "@random-truffle/auth": "workspace:*",
-    "@random-truffle/ui": "workspace:*",
+    "@auth0/nextjs-auth0": "^4.11.0",
     "@random-truffle/api-client": "workspace:*",
+    "@random-truffle/auth": "workspace:*",
+    "@random-truffle/core": "workspace:*",
+    "@random-truffle/types": "workspace:*",
+    "@random-truffle/ui": "workspace:*",
     "next": "^16.0.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",

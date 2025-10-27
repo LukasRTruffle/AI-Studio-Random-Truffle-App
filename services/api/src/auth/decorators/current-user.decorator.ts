@@ -1,13 +1,11 @@
 /**
  * CurrentUser decorator for getting authenticated user from request
+ * Returns user from Auth0 JWT payload
  */
 
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
-import type { OktaUser } from '@random-truffle/auth';
 
-export const CurrentUser = createParamDecorator(
-  (data: unknown, ctx: ExecutionContext): OktaUser => {
-    const request = ctx.switchToHttp().getRequest();
-    return request.user;
-  }
-);
+export const CurrentUser = createParamDecorator((_data: unknown, ctx: ExecutionContext) => {
+  const request = ctx.switchToHttp().getRequest();
+  return request.user;
+});

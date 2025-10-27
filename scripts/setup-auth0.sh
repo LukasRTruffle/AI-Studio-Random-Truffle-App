@@ -11,15 +11,15 @@ echo ""
 # Frontend dependencies
 echo "📦 Installing frontend Auth0 dependencies..."
 cd apps/web
-npm install @auth0/nextjs-auth0
+pnpm add @auth0/nextjs-auth0
 echo "✅ Frontend dependencies installed"
 echo ""
 
 # Backend dependencies
 echo "📦 Installing backend Auth0 dependencies..."
 cd ../../services/api
-npm install jsonwebtoken jwks-rsa
-npm install --save-dev @types/jsonwebtoken
+pnpm add jsonwebtoken jwks-rsa
+pnpm add -D @types/jsonwebtoken
 echo "✅ Backend dependencies installed"
 echo ""
 
@@ -29,5 +29,5 @@ echo "Next steps:"
 echo "1. Create Auth0 account at https://auth0.com/signup"
 echo "2. Follow AUTH0_SETUP.md to configure"
 echo "3. Add credentials to .env files"
-echo "4. Run 'npm run dev' in both frontend and backend"
+echo "4. Run dev servers: pnpm --filter @random-truffle/web dev (frontend) and pnpm --filter @random-truffle/api dev (backend)"
 echo ""

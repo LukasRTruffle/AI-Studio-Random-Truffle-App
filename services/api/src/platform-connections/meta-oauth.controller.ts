@@ -76,14 +76,14 @@ export class MetaOAuthController {
       await this.platformConnectionsService.create({
         tenantId,
         platform: 'meta',
-        accountId: primaryAccount.account_id,
+        accountId: String(primaryAccount.account_id),
         accountName: primaryAccount.name,
         accessToken: tokenData.access_token,
         expiresAt: new Date(Date.now() + tokenData.expires_in * 1000),
         metadata: {
           currency: primaryAccount.currency,
           timezone: primaryAccount.timezone_name,
-          accountStatus: primaryAccount.account_status,
+          accountStatus: String(primaryAccount.account_status),
         },
       });
 
@@ -94,9 +94,10 @@ export class MetaOAuthController {
       );
     } catch (error) {
       console.error('Meta OAuth error:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
       return res.redirect(
-        `${frontendUrl}/connections/ad-platforms?status=error&platform=meta&message=${encodeURIComponent(error.message)}`
+        `${frontendUrl}/connections/ad-platforms?status=error&platform=meta&message=${encodeURIComponent(errorMessage)}`
       );
     }
   }
@@ -111,6 +112,10 @@ export class MetaOAuthController {
     const clientId = process.env.META_APP_ID;
     const clientSecret = process.env.META_APP_SECRET;
     const redirectUri = `${process.env.API_URL || 'http://localhost:3001'}/auth/meta/callback`;
+
+    if (!clientId || !clientSecret) {
+      throw new Error('META_APP_ID and META_APP_SECRET must be configured');
+    }
 
     const tokenUrl = new URL('https://graph.facebook.com/v18.0/oauth/access_token');
     tokenUrl.searchParams.set('client_id', clientId);

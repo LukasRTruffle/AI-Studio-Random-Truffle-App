@@ -36,9 +36,9 @@ declare global {
 @Injectable()
 export class Auth0JwtMiddleware implements NestMiddleware {
   private readonly logger = new Logger(Auth0JwtMiddleware.name);
-  private client: jwksClient.JwksClient;
-  private domain: string;
-  private audience: string;
+  private client: jwksClient.JwksClient | undefined;
+  private domain: string | undefined;
+  private audience: string | undefined;
 
   constructor(private readonly configService: ConfigService) {
     this.domain = this.configService.get<string>('AUTH0_DOMAIN');
@@ -50,21 +50,21 @@ export class Auth0JwtMiddleware implements NestMiddleware {
     }
 
     // Initialize JWKS client to fetch Auth0 public keys
-    this.client = jwksClient({
+    this.client = new jwksClient.JwksClient({
       jwksUri: `https://${this.domain}/.well-known/jwks.json`,
       cache: true,
       cacheMaxAge: 86400000, // 24 hours
     });
   }
 
-  async use(req: Request, res: Response, next: NextFunction) {
+  async use(req: Request, _res: Response, next: NextFunction) {
     // Skip auth for public endpoints
     if (this.isPublicEndpoint(req.path)) {
       return next();
     }
 
     // Skip if Auth0 not configured (development mode)
-    if (!this.domain || !this.audience) {
+    if (!this.domain || !this.audience || !this.client) {
       this.logger.warn('Auth0 not configured - allowing request without authentication');
       return next();
     }
@@ -85,7 +85,8 @@ export class Auth0JwtMiddleware implements NestMiddleware {
 
       next();
     } catch (error) {
-      this.logger.error('JWT verification failed:', error.message);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      this.logger.error('JWT verification failed:', errorMessage);
       throw new UnauthorizedException('Invalid or expired token');
     }
   }
@@ -113,6 +114,10 @@ export class Auth0JwtMiddleware implements NestMiddleware {
    * Verify JWT token with Auth0 public key
    */
   private verifyToken(token: string): Promise<JwtPayload> {
+    if (!this.client) {
+      return Promise.reject(new Error('Auth0 client not initialized'));
+    }
+
     return new Promise((resolve, reject) => {
       // Decode header to get key ID
       const decoded = jwt.decode(token, { complete: true });
@@ -123,10 +128,18 @@ export class Auth0JwtMiddleware implements NestMiddleware {
 
       const kid = decoded.header.kid;
 
+      if (!this.client) {
+        return reject(new Error('Auth0 client not initialized'));
+      }
+
       // Get signing key from JWKS
       this.client.getSigningKey(kid, (err, key) => {
         if (err) {
           return reject(err);
+        }
+
+        if (!key) {
+          return reject(new Error('No signing key found'));
         }
 
         const signingKey = key.getPublicKey();
