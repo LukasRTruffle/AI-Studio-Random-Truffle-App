@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
-import { AuthProvider } from '@/contexts/AuthContext';
+import { Auth0Provider } from '@/contexts/Auth0Context';
+// import { AuthProvider } from '@/contexts/AuthContext'; // Old mock auth - replaced with Auth0
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -31,7 +32,7 @@ export default function RootLayout({
         <link rel="icon" href="/favicon.ico" />
       </head>
       <body className="antialiased bg-gray-50">
-        <AuthProvider>{children}</AuthProvider>
+        <Auth0Provider>{children}</Auth0Provider>
       </body>
     </html>
   );

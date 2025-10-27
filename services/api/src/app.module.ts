@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, MiddlewareConsumer, NestModule, RequestMethod } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
@@ -10,6 +10,7 @@ import { AuthModule } from './auth/auth.module';
 import { TenantsModule } from './tenants/tenants.module';
 import { ActivationModule } from './activation/activation.module';
 import { PlatformConnectionsModule } from './platform-connections/platform-connections.module';
+import { Auth0JwtMiddleware } from './auth/auth0-jwt.middleware';
 
 @Module({
   imports: [
@@ -42,6 +43,11 @@ import { PlatformConnectionsModule } from './platform-connections/platform-conne
     ActivationModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, Auth0JwtMiddleware],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    // Apply Auth0 JWT middleware to all routes
+    consumer.apply(Auth0JwtMiddleware).forRoutes({ path: '*', method: RequestMethod.ALL });
+  }
+}
