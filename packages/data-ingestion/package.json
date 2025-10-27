@@ -1,0 +1,22 @@
+{
+  "name": "@random-truffle/data-ingestion",
+  "version": "0.1.0",
+  "description": "ETL orchestration for ad platform data to BigQuery (MMM training data)",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf dist",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@random-truffle/types": "workspace:*",
+    "@random-truffle/bigquery": "workspace:*",
+    "@random-truffle/google-ads-client": "workspace:*",
+    "@google-cloud/bigquery": "^7.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "typescript": "^5.3.3"
+  }
+}
