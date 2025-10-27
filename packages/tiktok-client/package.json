@@ -1,0 +1,19 @@
+{
+  "name": "@random-truffle/tiktok-client",
+  "version": "0.1.0",
+  "description": "TikTok Business API v1.3 client for Segments and Reporting",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@random-truffle/activation": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.6",
+    "typescript": "^5.3.3"
+  }
+}
