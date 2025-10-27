@@ -30,8 +30,8 @@ In the **Settings** tab:
 **Allowed Callback URLs:**
 
 ```
-http://localhost:3000/api/auth/callback
-https://your-domain.vercel.app/api/auth/callback
+http://localhost:3000/auth/callback
+https://your-domain.vercel.app/auth/callback
 ```
 
 **Allowed Logout URLs:**
@@ -243,7 +243,7 @@ After logging in, open browser DevTools:
 
 ```javascript
 // In console
-fetch('/api/auth/me')
+fetch('/auth/me')
   .then((r) => r.json())
   .then((d) => console.log(d));
 ```
