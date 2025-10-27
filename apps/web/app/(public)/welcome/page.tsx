@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { tenantsApi } from '@/lib/api-client';
 
 /**
  * Welcome & Onboarding Flow
@@ -152,9 +153,18 @@ export default function WelcomePage() {
     setIsLoading(true);
 
     try {
-      // TODO: Call backend API to create tenant
-      // For now, simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      // Call backend API to create tenant
+      const tenant = await tenantsApi.create({
+        name: companyInfo.companyName,
+        industry: companyInfo.industry,
+        teamSize: companyInfo.teamSize,
+        primaryGoal: userGoals.primaryGoal,
+        platforms: userGoals.platforms,
+        hasGA4: userGoals.hasGA4,
+      });
+
+      // Store tenant ID in localStorage for future use
+      localStorage.setItem('tenantId', (tenant as { id: string }).id);
 
       addAgentMessage(
         `🎉 Your workspace is ready! Welcome to Random Truffle, ${companyInfo.companyName}! Let me give you a quick tour of what you can do here.`
@@ -163,8 +173,10 @@ export default function WelcomePage() {
       setTimeout(() => {
         setStep('tour-intro');
       }, 1500);
-    } catch {
-      addAgentMessage("Oops, something went wrong creating your workspace. Let's try that again.");
+    } catch (error) {
+      addAgentMessage(
+        `Oops, something went wrong creating your workspace: ${error instanceof Error ? error.message : 'Unknown error'}. Let's try that again.`
+      );
     } finally {
       setIsLoading(false);
     }

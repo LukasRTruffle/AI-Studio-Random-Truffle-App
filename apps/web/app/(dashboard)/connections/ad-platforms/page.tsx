@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { platformsApi } from '@/lib/api-client';
 
 /**
  * Ad Platform Connections
@@ -51,6 +52,13 @@ export default function AdPlatformConnectionsPage() {
     },
   ]);
   const [isLoading, setIsLoading] = useState(false);
+  const [tenantId, setTenantId] = useState<string | null>(null);
+
+  // Load tenant ID from localStorage
+  useEffect(() => {
+    const storedTenantId = localStorage.getItem('tenantId');
+    setTenantId(storedTenantId);
+  }, []);
 
   // Connection state
   const [connections, setConnections] = useState<Record<Platform, PlatformConnection>>({
@@ -139,13 +147,24 @@ export default function AdPlatformConnectionsPage() {
   const authorizePlatform = async () => {
     if (!selectedPlatform) return;
 
+    if (!tenantId) {
+      addAgentMessage('No tenant ID found. Please complete onboarding first.');
+      return;
+    }
+
     addUserMessage('Authorize access');
     setIsLoading(true);
     setStep('auth');
 
     try {
-      // TODO: Implement platform-specific OAuth
-      // For now, simulate with mock data
+      // For Meta, redirect to real OAuth
+      if (selectedPlatform === 'meta') {
+        const oauthUrl = platformsApi.getMetaAuthUrl(tenantId);
+        window.location.href = oauthUrl;
+        return; // Don't continue - user will be redirected
+      }
+
+      // For other platforms, simulate for now
       await new Promise((resolve) => setTimeout(resolve, 2000));
 
       // Mock ad accounts
