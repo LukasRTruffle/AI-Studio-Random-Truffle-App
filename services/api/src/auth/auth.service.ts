@@ -8,38 +8,44 @@ import { Injectable, UnauthorizedException, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { createOktaClient, type OktaClient, type OktaUser } from '@random-truffle/auth';
+// Okta imports disabled until Phase 1 - auth package has type errors
+// import { createOktaClient, type OktaClient, type OktaUser } from '@random-truffle/auth';
 import { SessionEntity } from './entities/session.entity';
 import type { AuthResponseDto, UserResponseDto, SessionResponseDto } from './dto/auth.dto';
 
 @Injectable()
 export class AuthService {
   private readonly logger = new Logger(AuthService.name);
-  private oktaClient: OktaClient;
+  // private oktaClient: OktaClient; // Disabled until Phase 1
 
   constructor(
     private readonly configService: ConfigService,
     @InjectRepository(SessionEntity)
     private readonly sessionRepository: Repository<SessionEntity>
   ) {
-    // Initialize Okta client
-    this.oktaClient = createOktaClient({
-      domain: this.configService.get<string>('OKTA_DOMAIN') || '',
-      clientId: this.configService.get<string>('OKTA_CLIENT_ID') || '',
-      clientSecret: this.configService.get<string>('OKTA_CLIENT_SECRET') || '',
-      issuer: this.configService.get<string>('OKTA_ISSUER') || '',
-      redirectUri: this.configService.get<string>('OKTA_REDIRECT_URI') || '',
-      scopes: ['openid', 'profile', 'email'],
-    });
+    // Okta client initialization disabled until Phase 1
+    // this.oktaClient = createOktaClient({
+    //   domain: this.configService.get<string>('OKTA_DOMAIN') || '',
+    //   clientId: this.configService.get<string>('OKTA_CLIENT_ID') || '',
+    //   clientSecret: this.configService.get<string>('OKTA_CLIENT_SECRET') || '',
+    //   issuer: this.configService.get<string>('OKTA_ISSUER') || '',
+    //   redirectUri: this.configService.get<string>('OKTA_REDIRECT_URI') || '',
+    //   scopes: ['openid', 'profile', 'email'],
+    // });
+    this.logger.warn(
+      'Auth service is using placeholder implementation - Okta OIDC will be implemented in Phase 1'
+    );
   }
 
   /**
    * Get authorization URL for OAuth login
+   * TODO: Implement in Phase 1
    *
    * @returns Authorization URL
    */
   getAuthorizationUrl(): string {
-    return this.oktaClient.getAuthorizationUrl();
+    // return this.oktaClient.getAuthorizationUrl();
+    throw new UnauthorizedException('Authentication not yet implemented - Phase 1');
   }
 
   /**
